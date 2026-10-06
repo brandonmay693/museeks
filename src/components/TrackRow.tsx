@@ -25,6 +25,7 @@ type Props = {
   hasSelectedAbove?: boolean;
   track: Track;
   index: number;
+  rowNumber?: number;
   isPlaying?: boolean;
   draggable?: boolean;
   simplified?: boolean;
@@ -100,6 +101,11 @@ export default function TrackRow(props: Props) {
       )}
       style={props.style}
     >
+      {props.rowNumber !== undefined && (
+        <div {...stylex.props(cellStyles.cell, cellStyles.rowNumber)}>
+          {props.rowNumber}
+        </div>
+      )}
       <div {...stylex.props(cellStyles.cell, cellStyles.trackPlaying)}>
         {props.isPlaying ? <PlayingIndicator /> : null}
       </div>
@@ -205,6 +211,12 @@ const cellStyles = stylex.create({
   trackPlaying: {
     width: '30px',
     flexShrink: 0,
+  },
+  rowNumber: {
+    width: '64px',
+    flexShrink: 0,
+    textAlign: 'right',
+    fontVariantNumeric: 'tabular-nums',
   },
   title: {
     flexGrow: 1,

@@ -2,6 +2,7 @@ use tauri::Runtime;
 use tauri::plugin::{Builder, TauriPlugin};
 
 const GENRES: &[&str] = &[
+    "Dance",
     "House",
     "Deep House",
     "Tech House",

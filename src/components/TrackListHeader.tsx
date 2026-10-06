@@ -17,6 +17,11 @@ export default function TrackListHeader({ sortable = true }: Props) {
       aria-label={t`Track list sorting options`}
     >
       <TrackListHeaderCell
+        xstyle={styles.cellRowNumber}
+        title="#"
+        sortBy={null}
+      />
+      <TrackListHeaderCell
         xstyle={styles.cellTrackPlaying}
         title="&nbsp;"
         sortBy={null}
@@ -65,6 +70,10 @@ const styles = stylex.create({
   },
   cellTrackPlaying: {
     width: '30px',
+  },
+  cellRowNumber: {
+    width: '64px',
+    textAlign: 'right',
   },
   cellTrack: {
     flexGrow: 1,
