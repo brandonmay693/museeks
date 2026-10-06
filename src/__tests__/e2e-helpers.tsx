@@ -58,6 +58,16 @@ export function beforeEachSetup() {
     vi.doMock('../lib/bridge-database');
     vi.doMock('../lib/bridge-config');
     vi.doMock('../lib/cover');
+    vi.doMock('../lib/bridge-energy', () => ({
+      default: { get: async () => null, set: async () => undefined },
+    }));
+    vi.doMock('../lib/bridge-genre', () => ({
+      default: {
+        list: async () => ['House', 'Tech House', 'Techno'],
+        get: async () => null,
+        set: async () => undefined,
+      },
+    }));
 
     // Initial Location
     window.location.hash = '#/library';

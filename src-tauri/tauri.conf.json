@@ -84,6 +84,11 @@
         "role": "Viewer"
       },
       {
+        "ext": ["aif", "aiff"],
+        "mimeType": "audio/aiff",
+        "role": "Viewer"
+      },
+      {
         "ext": ["ogg", "opus"],
         "mimeType": "audio/ogg",
         "role": "Viewer"

@@ -1,4 +1,4 @@
-use lofty::config::ParseOptions;
+use lofty::config::{ParseOptions, ParsingMode};
 use lofty::file::{AudioFile, TaggedFileExt};
 use lofty::probe::Probe;
 use lofty::tag::{Accessor, ItemKey};
@@ -61,13 +61,23 @@ pub struct TrackGroup {
 pub fn get_track_from_file(path: &PathBuf) -> AnyResult<Track> {
     match Probe::open(path)
         .map_err(lofty::error::LoftyError::from)
-        .and_then(|p| p.options(ParseOptions::new().read_cover_art(false)).read())
+        .and_then(|p| {
+            p.options(
+                ParseOptions::new()
+                    .read_cover_art(false)
+                    .parsing_mode(ParsingMode::Relaxed),
+            )
+            .read()
+        })
     {
         Ok(tagged_file) => {
-            let tag = tagged_file.primary_tag().ok_or_else(|| {
-                warn!("No tags found for file {:?}", path);
-                MuseeksError::ID3NoTags(path.clone())
-            })?;
+            // Metadata is optional. Use secondary tags (e.g. WAV INFO), then
+            // existing filename/unknown fallbacks for otherwise playable files.
+            let empty_tag = lofty::tag::Tag::new(tagged_file.primary_tag_type());
+            let tag = tagged_file
+                .primary_tag()
+                .or_else(|| tagged_file.first_tag())
+                .unwrap_or(&empty_tag);
 
             // Lots of tags are missing eaither TrackArtist or AlbumArtist, so instead
             // of being correct, we'll swap them if needed.
@@ -176,4 +186,88 @@ pub fn get_tracks_from_paths(mut files: Vec<PathBuf>) -> Vec<AnyResult<Track>> {
         .par_iter()
         .map(get_track_from_file)
         .collect::<Vec<_>>()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn wav_fixture(with_invalid_date: bool) -> Vec<u8> {
+        let mut chunks = Vec::new();
+        chunks.extend_from_slice(b"fmt \x10\0\0\0\x01\0\x01\0");
+        chunks.extend_from_slice(&44100_u32.to_le_bytes());
+        chunks.extend_from_slice(&88200_u32.to_le_bytes());
+        chunks.extend_from_slice(b"\x02\0\x10\0data");
+        chunks.extend_from_slice(&88200_u32.to_le_bytes());
+        chunks.resize(chunks.len() + 88200, 0);
+
+        if with_invalid_date {
+            let mut frames = Vec::new();
+            for (id, text) in [(b"TIT2", "Test title"), (b"TDRC", "not-a-date")] {
+                frames.extend_from_slice(id);
+                // These small ID3v2.4 frame sizes fit in one sync-safe byte.
+                frames.extend_from_slice(&[0, 0, 0, (text.len() + 1) as u8, 0, 0, 3]);
+                frames.extend_from_slice(text.as_bytes());
+            }
+            let mut tag = b"ID3\x04\0\0\0\0\0".to_vec();
+            tag.push(frames.len() as u8);
+            tag.extend(frames);
+            chunks.extend_from_slice(b"id3 ");
+            chunks.extend_from_slice(&(tag.len() as u32).to_le_bytes());
+            chunks.extend(&tag);
+            if tag.len() % 2 != 0 {
+                chunks.push(0);
+            }
+        }
+
+        let mut file = b"RIFF".to_vec();
+        file.extend_from_slice(&((chunks.len() + 4) as u32).to_le_bytes());
+        file.extend_from_slice(b"WAVE");
+        file.extend(chunks);
+        file
+    }
+
+    #[test]
+    fn imports_audio_without_tags_and_with_malformed_dates() {
+        for invalid_date in [false, true] {
+            let path = std::env::temp_dir().join(format!("museeks-{}.WAV", uuid::Uuid::new_v4()));
+            std::fs::write(&path, wav_fixture(invalid_date)).unwrap();
+            let result = get_track_from_file(&path);
+            std::fs::remove_file(&path).unwrap();
+            let track = result.unwrap();
+            assert_eq!(track.duration, 1);
+            if invalid_date {
+                assert_eq!(track.title, "Test title");
+                assert_eq!(track.year, None);
+            } else {
+                assert_eq!(track.title, path.file_name().unwrap().to_str().unwrap());
+                assert_eq!(track.artists, vec!["Unknown Artist"]);
+            }
+        }
+    }
+
+    #[test]
+    fn still_rejects_non_audio_files_with_audio_extensions() {
+        let path = std::env::temp_dir().join(format!("museeks-{}.wav", uuid::Uuid::new_v4()));
+        std::fs::write(&path, b"not an audio file").unwrap();
+        let result = get_track_from_file(&path);
+        std::fs::remove_file(&path).unwrap();
+        assert!(result.is_err());
+    }
+
+    #[test]
+    #[ignore = "Read-only diagnostic; set MUSEEKS_IMPORT_FOLDER to a music folder"]
+    fn inspect_import_folder() {
+        let folder = PathBuf::from(std::env::var("MUSEEKS_IMPORT_FOLDER").unwrap());
+        let paths = crate::libs::utils::scan_dir(&folder, &SUPPORTED_TRACKS_EXTENSIONS);
+        let mut failures = Vec::new();
+        for path in &paths {
+            match get_track_from_file(path) {
+                Ok(track) => println!("OK {}s {}", track.duration, path.display()),
+                Err(error) => failures.push(format!("{}: {}", path.display(), error)),
+            }
+        }
+        println!("{} candidates, {} failures", paths.len(), failures.len());
+        assert!(failures.is_empty(), "{}", failures.join("\n"));
+    }
 }

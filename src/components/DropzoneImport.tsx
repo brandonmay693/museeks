@@ -26,9 +26,6 @@ export default function DropzoneImport() {
           } else if (event.payload.type === 'drop') {
             setIsShown(false);
 
-            // Museeks does not deal in terms of files anymore, so we need to only retain folders.
-            // Why? Because in case a user imports a specific file from within a folder, it should
-            // ignore all other files, but it cannot do that as of today.
             const fileInfos = await Promise.all(
               event.payload.paths.map(async (path) => {
                 return {
@@ -42,8 +39,12 @@ export default function DropzoneImport() {
               .filter((fileOrFolder) => fileOrFolder.isDirectory)
               .map((folderInfo) => folderInfo.path);
 
+            const files = fileInfos
+              .filter((fileInfo) => fileInfo.isFile)
+              .map((fileInfo) => fileInfo.path);
+
             const skippedItemsCount =
-              event.payload.paths.length - folders.length;
+              event.payload.paths.length - folders.length - files.length;
 
             if (skippedItemsCount !== 0) {
               const message = plural(skippedItemsCount, {
@@ -63,8 +64,11 @@ export default function DropzoneImport() {
               });
 
               toastManager.add({ title: message, type: 'success' });
+            }
 
-              await LibraryAPI.scan();
+            if (folders.length > 0 || files.length > 0) {
+              // Import individual files without adding their parent folders.
+              await LibraryAPI.scan(false, [...folders, ...files]);
               await invalidate();
             }
           } else {
@@ -88,7 +92,7 @@ export default function DropzoneImport() {
       <div
         {...stylex.props(styles.dropzoneTitle)}
       >{t`Add music to the library`}</div>
-      <span>{t`Drop folders anywhere`}</span>
+      <span>{t`Drop music files or folders anywhere`}</span>
     </div>
   );
 }

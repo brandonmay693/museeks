@@ -2890,6 +2890,7 @@ dependencies = [
  "memoize",
  "nosleep",
  "pathdiff",
+ "plist",
  "rayon",
  "serde",
  "serde_json",

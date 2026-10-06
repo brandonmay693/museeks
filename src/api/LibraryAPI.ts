@@ -22,11 +22,12 @@ function search(value: string): void {
 async function scan(
   // Force a refresh of the ID3 tags stored in the DB
   refresh = false,
+  paths?: Array<string>,
 ): Promise<void> {
   try {
     useLibraryStore.setState({ refreshing: true });
 
-    const libraryFolders = await ConfigBridge.get('library_folders');
+    const libraryFolders = paths ?? (await ConfigBridge.get('library_folders'));
     const scanResult = await DatabaseBridge.importTracks(
       libraryFolders,
       refresh,
@@ -45,6 +46,14 @@ async function scan(
         title: t`${scanResult.playlist_count} playlist(s) were added to the library.`,
         type: 'success',
         timeout: 5000,
+      });
+    }
+
+    if (scanResult.track_failures > 0) {
+      toastManager.add({
+        title: t`${scanResult.track_failures} file(s) could not be imported. See the Museeks log for details.`,
+        type: 'warning',
+        timeout: 8000,
       });
     }
   } catch (err) {

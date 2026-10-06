@@ -20,6 +20,16 @@ fn main() {
                 tauri_build::InlinedPlugin::new().commands(&["get_cover"]),
             )
             .plugin(
+                "energy",
+                tauri_build::InlinedPlugin::new().commands(&[
+                    "get_energy",
+                    "set_energy",
+                    "get_genres",
+                    "get_genre",
+                    "set_genre",
+                ]),
+            )
+            .plugin(
                 "database",
                 tauri_build::InlinedPlugin::new().commands(&[
                     "scan_library",

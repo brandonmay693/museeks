@@ -48,7 +48,9 @@ fn is_dir_visible(entry: &walkdir::DirEntry) -> bool {
  */
 pub fn is_file_valid(path: &Path, allowed_extensions: &[&str]) -> bool {
     let extension = path.extension().and_then(OsStr::to_str).unwrap_or("");
-    allowed_extensions.contains(&extension)
+    allowed_extensions
+        .iter()
+        .any(|allowed| extension.eq_ignore_ascii_case(allowed))
 }
 
 /**
@@ -85,5 +87,57 @@ pub fn get_theme_from_name(theme_name: &str) -> Option<Theme> {
         "dark" => Some(Theme::Dark),
         SYSTEM_THEME => None,
         _ => None, // ? :]
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::libs::database::{SUPPORTED_PLAYLISTS_EXTENSIONS, SUPPORTED_TRACKS_EXTENSIONS};
+
+    #[test]
+    fn accepts_supported_extensions_regardless_of_case() {
+        for extension in SUPPORTED_TRACKS_EXTENSIONS {
+            for extension in [extension.to_string(), extension.to_ascii_uppercase()] {
+                assert!(is_file_valid(
+                    Path::new(&format!("/Music/Album/Track.{extension}")),
+                    &SUPPORTED_TRACKS_EXTENSIONS
+                ));
+            }
+        }
+        assert!(is_file_valid(
+            Path::new("Track.FlAc"),
+            &SUPPORTED_TRACKS_EXTENSIONS
+        ));
+        assert!(is_file_valid(
+            Path::new("Set.M3U"),
+            &SUPPORTED_PLAYLISTS_EXTENSIONS
+        ));
+    }
+
+    #[test]
+    fn rejects_missing_or_unsupported_extensions() {
+        for filename in ["Track", "Track.", "Track.TXT", "Track.MP3.backup", ".MP3"] {
+            assert!(!is_file_valid(
+                Path::new(filename),
+                &SUPPORTED_TRACKS_EXTENSIONS
+            ));
+        }
+    }
+
+    #[test]
+    fn scan_keeps_original_paths_for_mixed_case_extensions() {
+        let directory = std::env::temp_dir().join(format!("museeks-scan-{}", uuid::Uuid::new_v4()));
+        std::fs::create_dir(&directory).unwrap();
+        let filenames = ["First.MP3", "Second.FlAc", "Third.wav"];
+        for filename in filenames.iter().chain(["Notes.TXT"].iter()) {
+            std::fs::write(directory.join(filename), b"fixture").unwrap();
+        }
+        let mut actual = scan_dir(&directory, &SUPPORTED_TRACKS_EXTENSIONS);
+        let mut expected: Vec<PathBuf> = filenames.iter().map(|name| directory.join(name)).collect();
+        actual.sort();
+        expected.sort();
+        std::fs::remove_dir_all(&directory).unwrap();
+        assert_eq!(actual, expected);
     }
 }

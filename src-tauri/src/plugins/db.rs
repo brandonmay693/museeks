@@ -19,7 +19,7 @@ use crate::libs::error::{AnyResult, MuseeksError, handle_fatal_error};
 use crate::libs::events::IPCEvent;
 use crate::libs::playlist::Playlist;
 use crate::libs::track::{Track, TrackGroup, get_track_from_file, get_track_id_for_path};
-use crate::libs::utils::{TimeLogger, scan_dirs};
+use crate::libs::utils::{TimeLogger, is_file_valid, scan_dirs};
 
 use super::config::get_storage_dir;
 
@@ -109,9 +109,23 @@ async fn scan_library<R: Runtime>(
     }
 
     let mut scan_result = ScanResult::default();
+    scan_result.track_failures = import_paths
+        .iter()
+        .filter(|path| {
+            let unsupported = path.is_file()
+                && !is_file_valid(path, &SUPPORTED_TRACKS_EXTENSIONS)
+                && !is_file_valid(path, &SUPPORTED_PLAYLISTS_EXTENSIONS);
+            if unsupported {
+                warn!("Unsupported file extension: {:?}", path);
+            }
+            unsupported
+        })
+        .count();
 
     // Scan all directories for valid files to be scanned and imported
     let mut track_paths = scan_dirs(&import_paths, &SUPPORTED_TRACKS_EXTENSIONS);
+    track_paths.sort();
+    track_paths.dedup();
     let scanned_paths_count = track_paths.len();
 
     // Remove files that are already in the DB (speedup scan + prevent duplicate errors)
@@ -176,9 +190,9 @@ async fn scan_library<R: Runtime>(
 
     let track_failures = track_paths.len() - tracks.len();
     scan_result.track_count = tracks.len();
-    scan_result.track_failures = track_failures;
+    scan_result.track_failures += track_failures;
     info!("{} tracks successfully scanned", tracks.len());
-    info!("{} tracks failed to be scanned", track_failures);
+    info!("{} tracks failed to be scanned", scan_result.track_failures);
 
     scan_logger.complete();
 

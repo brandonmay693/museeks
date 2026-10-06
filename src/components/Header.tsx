@@ -6,6 +6,8 @@ import { useRef } from 'react';
 import ButtonIcon from '../elements/ButtonIcon';
 import { usePlayerState } from '../hooks/usePlayer';
 import usePlayingTrack from '../hooks/usePlayingTrack';
+import EnergyTag from './EnergyTag';
+import GenreTag from './GenreTag';
 import PlayerControls from './PlayerControls';
 import PlayingBar from './PlayingBar';
 import Queue from './Queue';
@@ -42,6 +44,15 @@ export default function Header() {
         {trackPlaying != null && (
           <>
             <PlayingBar trackPlaying={trackPlaying} />
+            {platform === 'macos' && (
+              <>
+                <GenreTag
+                  key={`genre:${trackPlaying.path}`}
+                  path={trackPlaying.path}
+                />
+                <EnergyTag key={trackPlaying.path} path={trackPlaying.path} />
+              </>
+            )}
             <Popover.Root>
               <div ref={queueAnchorRef} {...stylex.props(styles.queue)}>
                 <Popover.Trigger
@@ -129,7 +140,7 @@ const styles = stylex.create({
     flexShrink: 1,
     flexBasis: 'auto',
     minWidth: 0,
-    maxWidth: '600px',
+    maxWidth: '760px',
     display: 'flex',
   },
   queue: {

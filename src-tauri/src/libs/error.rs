@@ -48,9 +48,6 @@ pub enum MuseeksError {
 
     #[error("Failed to generate ID for path: {0}")]
     IDGeneration(PathBuf),
-
-    #[error("Failed to find ID3 tags for path: {0}")]
-    ID3NoTags(PathBuf),
 }
 
 /**

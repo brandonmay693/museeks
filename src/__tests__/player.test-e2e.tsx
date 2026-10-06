@@ -9,6 +9,24 @@ import {
 
 beforeEachSetup();
 
+test.runIf(import.meta.env.PLATFORM === 'macos')(
+  'Genre sits left of energy without overflowing the header',
+  async () => {
+    await setupScannedLibrary();
+    await getTrackByName(/Whiskey Blues/).dblClick();
+    const genre = page.getByRole('combobox', { name: 'Track genre' });
+    const energy = page.getByRole('combobox', { name: 'Track energy' });
+    await expect.element(genre).toBeEnabled();
+    await expect.element(energy).toBeEnabled();
+    const genreBounds = genre.element().getBoundingClientRect();
+    const energyBounds = energy.element().getBoundingClientRect();
+    const header = page.getByRole('banner').element();
+    expect(genreBounds.right).toBeLessThanOrEqual(energyBounds.left);
+    expect(header.scrollWidth).toBeLessThanOrEqual(header.clientWidth);
+    await page.getByRole('button', { name: 'Pause' }).click();
+  },
+);
+
 test('Double click on a track should play it and display its metadata', async () => {
   // By default, the player is paused
   await expect

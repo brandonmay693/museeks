@@ -14,21 +14,26 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. placeholder {0}: scanResult.track_count
-#: src/api/LibraryAPI.ts:37
+#: src/api/LibraryAPI.ts:38
 msgid "{0} track(s) were refreshed."
 msgstr "{0} piste(s) ont été actualisée(s)."
 
 #. placeholder {0}: scanResult.track_count
-#: src/api/LibraryAPI.ts:38
+#: src/api/LibraryAPI.ts:39
 msgid "{0} track(s) were added to the library."
 msgstr "{0} piste(s) ont été ajoutée(s) à la bibliothèque."
 
 #. placeholder {0}: scanResult.playlist_count
-#: src/api/LibraryAPI.ts:45
+#: src/api/LibraryAPI.ts:46
 msgid "{0} playlist(s) were added to the library."
 msgstr "{0} playlist(s) ont été ajoutée(s) à la bibliothèque."
 
-#: src/api/LibraryAPI.ts:106
+#. placeholder {0}: scanResult.track_failures
+#: src/api/LibraryAPI.ts:54
+msgid "{0} file(s) could not be imported. See the Museeks log for details."
+msgstr ""
+
+#: src/api/LibraryAPI.ts:115
 msgid "Library was reset"
 msgstr "La bibliothèque a été réinitialisée"
 
@@ -57,22 +62,126 @@ msgstr "Lecture aléatoire"
 msgid "Album cover"
 msgstr "Couverture de l'album"
 
-#: src/components/DropzoneImport.tsx:49
+#: src/components/DropzoneImport.tsx:50
 msgid "{skippedItemsCount, plural, one {# invalid item ignored} other {# invalid items ignored}}"
 msgstr "{skippedItemsCount, plural, one {# élément invalide ignoré} other {# éléments invalides ignorés}}"
 
 #. placeholder {0}: folders.length
-#: src/components/DropzoneImport.tsx:60
+#: src/components/DropzoneImport.tsx:61
 msgid "{0, plural, one {# folder added to the library} other {# folders added to the library}}"
 msgstr "{0, plural, one {# dossier ajouté à la bibliothèque} other {# dossiers ajoutés à la bibliothèque}}"
 
-#: src/components/DropzoneImport.tsx:90
+#: src/components/DropzoneImport.tsx:94
 msgid "Add music to the library"
 msgstr "Ajouter de la musique à la bibliothèque"
 
-#: src/components/DropzoneImport.tsx:91
-msgid "Drop folders anywhere"
-msgstr "Déposer des dossiers n'importe où"
+#: src/components/DropzoneImport.tsx:95
+msgid "Drop music files or folders anywhere"
+msgstr ""
+
+#. placeholder {0}: String(error)
+#: src/components/EnergyTag.tsx:27
+msgid "Could not save the energy tag: {0}"
+msgstr ""
+
+#: src/components/EnergyTag.tsx:33
+msgid "1 · Ambient"
+msgstr ""
+
+#: src/components/EnergyTag.tsx:34
+msgid "2 · Mellow"
+msgstr ""
+
+#: src/components/EnergyTag.tsx:35
+msgid "3 · Laid-back"
+msgstr ""
+
+#: src/components/EnergyTag.tsx:36
+msgid "4 · Warm-up"
+msgstr ""
+
+#: src/components/EnergyTag.tsx:37
+msgid "5 · Steady groove"
+msgstr ""
+
+#: src/components/EnergyTag.tsx:38
+msgid "6 · Driving"
+msgstr ""
+
+#: src/components/EnergyTag.tsx:39
+msgid "7 · High energy"
+msgstr ""
+
+#: src/components/EnergyTag.tsx:40
+msgid "8 · Peak time"
+msgstr ""
+
+#: src/components/EnergyTag.tsx:41
+msgid "9 · Intense"
+msgstr ""
+
+#: src/components/EnergyTag.tsx:42
+msgid "10 · Maximum"
+msgstr ""
+
+#. placeholder {0}: String(energy.error)
+#: src/components/EnergyTag.tsx:50
+msgid "Could not read Finder tags: {0}"
+msgstr ""
+
+#: src/components/EnergyTag.tsx:54
+msgid "Energy: retry"
+msgstr ""
+
+#: src/components/EnergyTag.tsx:58
+msgid "Track energy"
+msgstr ""
+
+#: src/components/EnergyTag.tsx:60
+msgid "Save energy as a Finder tag on the original file. Use these tags in macOS Smart Folders."
+msgstr ""
+
+#: src/components/EnergyTag.tsx:71
+msgid "Saving energy…"
+msgstr ""
+
+#: src/components/EnergyTag.tsx:73
+msgid "Loading energy…"
+msgstr ""
+
+#: src/components/EnergyTag.tsx:74
+msgid "Energy: untagged"
+msgstr ""
+
+#. placeholder {0}: String(error)
+#: src/components/GenreTag.tsx:33
+msgid "Could not save the genre tag: {0}"
+msgstr ""
+
+#. placeholder {0}: String(genre.error ?? genres.error)
+#: src/components/GenreTag.tsx:47
+msgid "Could not load genre tags: {0}"
+msgstr ""
+
+#: src/components/GenreTag.tsx:54
+msgid "Genre: retry"
+msgstr ""
+
+#: src/components/GenreTag.tsx:58
+msgid "Track genre"
+msgstr ""
+
+#: src/components/GenreTag.tsx:60
+msgid "Save genre as a Finder tag on the original file. Combine it with energy in macOS Smart Folders."
+msgstr ""
+
+#: src/components/GenreTag.tsx:67
+msgid "Loading genre…"
+msgstr ""
+
+#: src/components/GenreTag.tsx:67
+msgid "Genre: untagged"
+msgstr ""
 
 #: src/components/GlobalErrors.tsx:33
 msgid "Something wrong happened: {errorMessage}"
@@ -95,11 +204,11 @@ msgstr "Essayez de <0>recharger l'application</0>,"
 msgid "or if it happens again, please <0>report an issue</0>."
 msgstr "ou si cela se reproduit, veuillez <0>signaler un problème</0>."
 
-#: src/components/Header.tsx:24
+#: src/components/Header.tsx:26
 msgid "Header"
 msgstr "En-tête"
 
-#: src/components/Header.tsx:53
+#: src/components/Header.tsx:64
 msgid "Queue"
 msgstr "File d'attente"
 
