@@ -202,3 +202,160 @@ test('Column headers should sort tracks in the library', async () => {
   await expect.element(secondTrack).toHaveTextContent(track2content);
   await expect.element(thirdTrack).toHaveTextContent(track0content);
 });
+
+test.skipIf(import.meta.env.PLATFORM !== 'macos')(
+  'Finder tag filters use missing tags, intersect, and compose with search',
+  async () => {
+    await setupScannedLibrary();
+    const needsTagging = page.getByRole('checkbox', { name: 'Needs tagging' });
+    const genre = page.getByRole('combobox', { name: 'Genre', exact: true });
+    const energy = page.getByRole('combobox', { name: 'Energy', exact: true });
+    await needsTagging.click();
+    await expect.element(getTrackByName(/Whiskey Blues/)).toBeInTheDocument();
+    await expect.element(getTrackByName(/Majestic Blues/)).toBeInTheDocument();
+    await expect
+      .element(getTrackByName(/Romantic Blues/))
+      .not.toBeInTheDocument();
+    await expect
+      .poll(() => window.location.hash)
+      .toContain('needsTagging=true');
+
+    await genre.selectOptions('House');
+    await energy.selectOptions('untagged');
+    await expect
+      .element(getTrackByName(/Whiskey Blues/))
+      .not.toBeInTheDocument();
+    await expect.element(getTrackByName(/Majestic Blues/)).toBeInTheDocument();
+    await page.getByRole('textbox', { name: 'Search library' }).fill('Whiskey');
+    await expect
+      .element(page.getByText('No tracks match these tag filters and search.'))
+      .toBeVisible();
+    await page.getByRole('button', { name: 'Clear search' }).click();
+    await genre.selectOptions('untagged');
+    await expect.element(getTrackByName(/Whiskey Blues/)).toBeInTheDocument();
+    await expect
+      .element(getTrackByName(/Majestic Blues/))
+      .not.toBeInTheDocument();
+
+    await page.getByRole('button', { name: 'Clear filters' }).click();
+    await expect.element(needsTagging).not.toBeChecked();
+    await energy.selectOptions('7');
+    await expect.element(getTrackAt(0)).toHaveTextContent('Romantic Blues');
+    await expect.element(getTrackAt(1)).not.toBeInTheDocument();
+  },
+);
+
+test.skipIf(import.meta.env.PLATFORM !== 'macos')(
+  'Completing Finder tags removes the track from Needs tagging without stopping playback',
+  async () => {
+    await setupScannedLibrary();
+    await page.getByRole('checkbox', { name: 'Needs tagging' }).click();
+    await getTrackByName(/Whiskey Blues/).dblClick();
+    const genre = page.getByRole('combobox', { name: 'Track genre' });
+    const energy = page.getByRole('combobox', { name: 'Track energy' });
+    await expect.element(genre).toBeEnabled();
+    await genre.selectOptions('House');
+    await expect.element(genre).toBeEnabled();
+    await expect.element(getTrackByName(/Whiskey Blues/)).toBeInTheDocument();
+    await expect.element(energy).toBeEnabled();
+    await energy.selectOptions('7');
+    await expect
+      .element(getTrackByName(/Whiskey Blues/))
+      .not.toBeInTheDocument();
+    await expect
+      .element(page.getByRole('banner').getByText('Whiskey Blues'))
+      .toBeVisible();
+    const pause = page.getByRole('button', { name: 'Pause' });
+    await expect.element(pause).toBeVisible();
+    await page.getByRole('button', { name: 'Refresh tags' }).click();
+    await expect
+      .element(page.getByRole('button', { name: 'Refresh tags' }))
+      .toBeEnabled();
+    await expect
+      .element(getTrackByName(/Whiskey Blues/))
+      .not.toBeInTheDocument();
+    await pause.click();
+  },
+);
+
+test.runIf(import.meta.env.PLATFORM === 'macos')(
+  'The Finder tag column shows both values and updates missing values after saves',
+  async () => {
+    await setupScannedLibrary();
+    await expect
+      .element(
+        page.getByRole('button', {
+          name: 'Museek Genre and Energy',
+          exact: true,
+        }),
+      )
+      .toBeVisible();
+    const whiskey = getTrackByName(/Whiskey Blues/);
+    await whiskey.dblClick();
+    const energy = page.getByRole('combobox', { name: 'Track energy' });
+    const genre = page.getByRole('combobox', { name: 'Track genre' });
+    await expect.element(energy).toBeEnabled();
+    await energy.selectOptions('');
+    await expect.element(genre).toBeEnabled();
+    await genre.selectOptions('');
+    await expect
+      .element(whiskey.getByText('? - ?', { exact: true }))
+      .toBeVisible();
+    await expect
+      .element(
+        getTrackByName(/Majestic Blues/).getByText('House - ?', {
+          exact: true,
+        }),
+      )
+      .toBeVisible();
+    await expect
+      .element(
+        getTrackByName(/Romantic Blues/).getByText('House - 7', {
+          exact: true,
+        }),
+      )
+      .toBeVisible();
+
+    await expect.element(energy).toBeEnabled();
+    await energy.selectOptions('7');
+    await expect
+      .element(whiskey.getByText('? - 7', { exact: true }))
+      .toBeVisible();
+    await expect.element(genre).toBeEnabled();
+    await genre.selectOptions('House');
+    await expect
+      .element(whiskey.getByText('House - 7', { exact: true }))
+      .toBeVisible();
+    await expect.element(energy).toBeEnabled();
+    await energy.selectOptions('');
+    await expect
+      .element(whiskey.getByText('House - ?', { exact: true }))
+      .toBeVisible();
+    await page.getByRole('button', { name: 'Pause' }).click();
+  },
+);
+
+test.runIf(import.meta.env.PLATFORM === 'macos')(
+  'The Finder tag header sorts by energy and reorders after editing a tag',
+  async () => {
+    await setupScannedLibrary();
+    await getTrackByName(/Whiskey Blues/).dblClick();
+    const energy = page.getByRole('combobox', { name: 'Track energy' });
+    await expect.element(energy).toBeEnabled();
+    await energy.selectOptions('2');
+    const sort = getSortButton('Museek Genre and Energy');
+    await sort.click();
+    await expect.element(getTrackAt(0)).toHaveTextContent('Whiskey Blues');
+    await expect.element(getTrackAt(1)).toHaveTextContent('Romantic Blues');
+    await expect.element(getTrackAt(2)).toHaveTextContent('Majestic Blues');
+    await sort.click();
+    await expect.element(getTrackAt(0)).toHaveTextContent('Romantic Blues');
+    await expect.element(getTrackAt(1)).toHaveTextContent('Whiskey Blues');
+    await expect.element(getTrackAt(2)).toHaveTextContent('Majestic Blues');
+    await expect.element(energy).toBeEnabled();
+    await energy.selectOptions('10');
+    await expect.element(getTrackAt(0)).toHaveTextContent('Whiskey Blues');
+    await expect.element(getTrackAt(1)).toHaveTextContent('Romantic Blues');
+    await page.getByRole('button', { name: 'Pause' }).click();
+  },
+);

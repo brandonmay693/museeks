@@ -1,4 +1,4 @@
-import { expect, test } from 'vite-plus/test';
+import { expect, test, vi } from 'vite-plus/test';
 import { page } from 'vite-plus/test/browser';
 
 import {
@@ -81,4 +81,43 @@ test('Double click on a track should play it and display its metadata', async ()
   await expect
     .element(page.getByRole('button', { name: 'Pause' }))
     .not.toBeInTheDocument();
+});
+
+test('The header artist and album links tolerate a blank artist elsewhere in the library', async () => {
+  await setupScannedLibrary();
+  const { default: database } = await import('../lib/bridge-database');
+  const tracks = await database.getAllTracks();
+  const track = tracks.find((item) => item.title === 'Whiskey Blues')!;
+  const artists = vi
+    .spyOn(database, 'getAllArtists')
+    .mockResolvedValue(['', track.album_artist, 'Unknown Artist']);
+  const albums = vi.spyOn(database, 'getArtistTracks').mockResolvedValue([
+    {
+      label: track.album,
+      year: track.year,
+      genres: track.genres,
+      duration: track.duration,
+      tracks: [track],
+    },
+  ]);
+  try {
+    await getTrackByName(/Whiskey Blues/).dblClick();
+    const header = page.getByRole('banner');
+    await header
+      .getByRole('link', { name: 'Captain_Sleepy', exact: true })
+      .click();
+    await expect
+      .element(page.getByRole('heading', { name: 'Another Album' }))
+      .toBeVisible();
+    await expect.element(getTrackByName(/Whiskey Blues/)).toBeVisible();
+    await header
+      .getByRole('link', { name: 'Another Album', exact: true })
+      .click();
+    await expect.poll(() => window.location.hash).toContain('focused_album=');
+    await expect.element(getTrackByName(/Whiskey Blues/)).toBeVisible();
+    await page.getByRole('button', { name: 'Pause' }).click();
+  } finally {
+    artists.mockRestore();
+    albums.mockRestore();
+  }
 });

@@ -58,6 +58,7 @@ const styles = stylex.create({
     cursor: 'pointer',
     borderStyle: 'none',
     backgroundColor: 'transparent',
+    color: 'inherit',
     padding: 0,
   },
   animation: {

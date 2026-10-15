@@ -3,6 +3,7 @@ import { beforeEach, vi } from 'vite-plus/test';
 import { render } from 'vitest-browser-react';
 import { page } from 'vitest/context';
 
+import type { FinderTags } from '../generated/typings';
 import { MOCK_CONFIG } from '../lib/__mocks__/bridge-config.ts';
 import { messages } from '../translations/en.po';
 
@@ -13,6 +14,7 @@ type Whatever = () => void | Promise<void>;
  */
 export function beforeEachSetup() {
   beforeEach(async () => {
+    localStorage.removeItem('museeks-library-view');
     // Stub Museeks Globals
     vi.stubGlobal('__MUSEEKS_INITIAL_CONFIG', MOCK_CONFIG);
     vi.stubGlobal('__MUSEEKS_INITIAL_QUEUE', []);
@@ -28,7 +30,10 @@ export function beforeEachSetup() {
       },
       callbacks: new Map(),
       // mocks
-      invoke: vi.fn<Whatever>(),
+      invoke: vi.fn<(command: string) => Promise<[number, string] | undefined>>(
+        async (command) =>
+          command === 'plugin:menu|new' ? [1, 'test-menu'] : undefined,
+      ),
       convertFileSrc: (path: string) => path,
       ipc: vi.fn<Whatever>(),
       postMessage: vi.fn<Whatever>(),
@@ -56,16 +61,43 @@ export function beforeEachSetup() {
 
     // Mock Bridges
     vi.doMock('../lib/bridge-database');
+    vi.doMock('../lib/bridge-rekordbox', () => ({
+      default: { get: async () => null, setSource: async () => null },
+    }));
     vi.doMock('../lib/bridge-config');
     vi.doMock('../lib/cover');
+    const tagsByPath = new Map<string, FinderTags>();
+    const getTags = (path: string): FinderTags => {
+      if (!tagsByPath.has(path)) {
+        tagsByPath.set(path, {
+          genre: path.includes('whiskey') ? null : 'House',
+          energy: path.includes('romantic') ? 7 : null,
+          error: null,
+        });
+      }
+      return tagsByPath.get(path)!;
+    };
     vi.doMock('../lib/bridge-energy', () => ({
-      default: { get: async () => null, set: async () => undefined },
+      default: {
+        get: async (path: string) => getTags(path).energy,
+        set: async (path: string, energy: number | null) => {
+          getTags(path).energy = energy;
+        },
+      },
     }));
     vi.doMock('../lib/bridge-genre', () => ({
       default: {
         list: async () => ['House', 'Tech House', 'Techno'],
-        get: async () => null,
-        set: async () => undefined,
+        get: async (path: string) => getTags(path).genre,
+        set: async (path: string, genre: string | null) => {
+          getTags(path).genre = genre;
+        },
+      },
+    }));
+    vi.doMock('../lib/bridge-finder-tags', () => ({
+      default: {
+        get: async (paths: string[]) =>
+          Object.fromEntries(paths.map((path) => [path, { ...getTags(path) }])),
       },
     }));
 

@@ -1,7 +1,12 @@
 import orderBy from 'lodash-es/orderBy';
 import uniq from 'lodash-es/uniq';
 
-import type { SortBy, SortOrder, Track } from '../generated/typings';
+import type {
+  FinderTags,
+  SortBy,
+  SortOrder,
+  Track,
+} from '../generated/typings';
 import type { Path } from '../types/museeks';
 
 /**
@@ -93,7 +98,7 @@ const ALBUM = (t: Track): string => stripAccents(t.album.toLowerCase());
 const TITLE = (t: Track): string => stripAccents(t.title.toLowerCase());
 
 type TrackKeys = Path<Track>;
-type IterateeFunction = (track: Track) => string;
+type IterateeFunction = (track: Track) => string | number;
 
 type SortConfig = Array<TrackKeys | IterateeFunction>;
 
@@ -104,8 +109,25 @@ const SORT_ORDERS: Record<SortBy, SortConfig> = {
   Duration: ['duration', ARTIST, ALBUM, 'disk_no', 'track_no'],
   Album: [ALBUM, ARTIST, 'disk_no', 'track_no'],
   Genre: [GENRE, ARTIST, ALBUM, 'disk_no', 'track_no'],
+  Energy: [ARTIST, ALBUM, 'disk_no', 'track_no'],
 };
 
-export function getSortOrder(sortBy: SortBy): SortConfig {
+export function getSortOrder(
+  sortBy: SortBy,
+  sortOrder: SortOrder = 'Asc',
+  finderTags?: Record<string, FinderTags>,
+): SortConfig {
+  if (sortBy === 'Energy') {
+    const energy = (track: Track): number => {
+      const tags = finderTags?.[track.path];
+      // Keep untagged, unreadable, and not-yet-loaded tracks last in both directions.
+      return tags && tags.error === null && tags.energy !== null
+        ? tags.energy
+        : sortOrder === 'Asc'
+          ? Infinity
+          : -Infinity;
+    };
+    return [energy, ...SORT_ORDERS.Energy];
+  }
   return SORT_ORDERS[sortBy];
 }

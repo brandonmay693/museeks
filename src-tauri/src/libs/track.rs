@@ -68,8 +68,7 @@ pub fn get_track_from_file(path: &PathBuf) -> AnyResult<Track> {
                     .parsing_mode(ParsingMode::Relaxed),
             )
             .read()
-        })
-    {
+        }) {
         Ok(tagged_file) => {
             // Metadata is optional. Use secondary tags (e.g. WAV INFO), then
             // existing filename/unknown fallbacks for otherwise playable files.

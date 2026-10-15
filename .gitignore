@@ -31,3 +31,10 @@ target
 release
 !src-tauri/release
 .tanstack
+
+# Browser test run artifacts
+.vitest-attachments/
+src/__tests__/__screenshots__/
+
+# Personal Rekordbox library export
+/rekordbox-export.xml

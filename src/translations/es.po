@@ -42,11 +42,11 @@ msgid "The playlist \"{name}\" was created"
 msgstr "La lista \"{name}\" fue creada"
 
 #. placeholder {0}: newRelease.tag_name
-#: src/api/SettingsAPI.ts:168
+#: src/api/SettingsAPI.ts:185
 msgid "Museeks {0} is available, check https://museeks.io!"
 msgstr "Museeks {0} está disponible, ¡comprueba https://museeks.io!"
 
-#: src/api/SettingsAPI.ts:170
+#: src/api/SettingsAPI.ts:187
 msgid "Museeks {currentVersion} is the latest version available."
 msgstr "Museeks {currentVersion} es la última versión disponible."
 
@@ -80,106 +80,106 @@ msgid "Drop music files or folders anywhere"
 msgstr ""
 
 #. placeholder {0}: String(error)
-#: src/components/EnergyTag.tsx:27
+#: src/components/EnergyTag.tsx:29
 msgid "Could not save the energy tag: {0}"
 msgstr ""
 
-#: src/components/EnergyTag.tsx:33
+#: src/components/EnergyTag.tsx:35
 msgid "1 · Ambient"
 msgstr ""
 
-#: src/components/EnergyTag.tsx:34
+#: src/components/EnergyTag.tsx:36
 msgid "2 · Mellow"
 msgstr ""
 
-#: src/components/EnergyTag.tsx:35
+#: src/components/EnergyTag.tsx:37
 msgid "3 · Laid-back"
 msgstr ""
 
-#: src/components/EnergyTag.tsx:36
+#: src/components/EnergyTag.tsx:38
 msgid "4 · Warm-up"
 msgstr ""
 
-#: src/components/EnergyTag.tsx:37
+#: src/components/EnergyTag.tsx:39
 msgid "5 · Steady groove"
 msgstr ""
 
-#: src/components/EnergyTag.tsx:38
+#: src/components/EnergyTag.tsx:40
 msgid "6 · Driving"
 msgstr ""
 
-#: src/components/EnergyTag.tsx:39
+#: src/components/EnergyTag.tsx:41
 msgid "7 · High energy"
 msgstr ""
 
-#: src/components/EnergyTag.tsx:40
+#: src/components/EnergyTag.tsx:42
 msgid "8 · Peak time"
 msgstr ""
 
-#: src/components/EnergyTag.tsx:41
+#: src/components/EnergyTag.tsx:43
 msgid "9 · Intense"
 msgstr ""
 
-#: src/components/EnergyTag.tsx:42
+#: src/components/EnergyTag.tsx:44
 msgid "10 · Maximum"
 msgstr ""
 
 #. placeholder {0}: String(energy.error)
-#: src/components/EnergyTag.tsx:50
+#: src/components/EnergyTag.tsx:52
 msgid "Could not read Finder tags: {0}"
 msgstr ""
 
-#: src/components/EnergyTag.tsx:54
+#: src/components/EnergyTag.tsx:56
 msgid "Energy: retry"
 msgstr ""
 
-#: src/components/EnergyTag.tsx:58
+#: src/components/EnergyTag.tsx:60
 msgid "Track energy"
 msgstr ""
 
-#: src/components/EnergyTag.tsx:60
+#: src/components/EnergyTag.tsx:62
 msgid "Save energy as a Finder tag on the original file. Use these tags in macOS Smart Folders."
 msgstr ""
 
-#: src/components/EnergyTag.tsx:71
+#: src/components/EnergyTag.tsx:73
 msgid "Saving energy…"
 msgstr ""
 
-#: src/components/EnergyTag.tsx:73
+#: src/components/EnergyTag.tsx:75
 msgid "Loading energy…"
 msgstr ""
 
-#: src/components/EnergyTag.tsx:74
+#: src/components/EnergyTag.tsx:76
 msgid "Energy: untagged"
 msgstr ""
 
 #. placeholder {0}: String(error)
-#: src/components/GenreTag.tsx:33
+#: src/components/GenreTag.tsx:35
 msgid "Could not save the genre tag: {0}"
 msgstr ""
 
 #. placeholder {0}: String(genre.error ?? genres.error)
-#: src/components/GenreTag.tsx:47
+#: src/components/GenreTag.tsx:49
 msgid "Could not load genre tags: {0}"
 msgstr ""
 
-#: src/components/GenreTag.tsx:54
+#: src/components/GenreTag.tsx:56
 msgid "Genre: retry"
 msgstr ""
 
-#: src/components/GenreTag.tsx:58
+#: src/components/GenreTag.tsx:60
 msgid "Track genre"
 msgstr ""
 
-#: src/components/GenreTag.tsx:60
+#: src/components/GenreTag.tsx:62
 msgid "Save genre as a Finder tag on the original file. Combine it with energy in macOS Smart Folders."
 msgstr ""
 
-#: src/components/GenreTag.tsx:67
+#: src/components/GenreTag.tsx:69
 msgid "Loading genre…"
 msgstr ""
 
-#: src/components/GenreTag.tsx:67
+#: src/components/GenreTag.tsx:69
 msgid "Genre: untagged"
 msgstr ""
 
@@ -204,6 +204,76 @@ msgstr "Intenta <0>recargar la aplicación</0>,"
 msgid "or if it happens again, please <0>report an issue</0>."
 msgstr "o si vuelve a ocurrir, por favor <0>reporta un problema</0>."
 
+#: src/components/HarmonicMatches.tsx:74
+msgid "The reference track is no longer in your library."
+msgstr ""
+
+#: src/components/HarmonicMatches.tsx:76
+msgid "This track has no recognized key in the connected Rekordbox export."
+msgstr ""
+
+#: src/components/HarmonicMatches.tsx:77
+msgid "No compatible tracks match these filters. Try clearing the filters or refreshing the XML export."
+msgstr ""
+
+#: src/components/HarmonicMatches.tsx:80
+msgid "Harmonic matches"
+msgstr ""
+
+#: src/components/HarmonicMatches.tsx:83
+#: src/components/TrackList.tsx:472
+msgid "Compatible tracks"
+msgstr ""
+
+#: src/components/HarmonicMatches.tsx:85
+msgid "Track unavailable"
+msgstr ""
+
+#: src/components/HarmonicMatches.tsx:90
+msgid "Close matches"
+msgstr ""
+
+#. placeholder {0}: tracks.length
+#: src/components/HarmonicMatches.tsx:93
+msgid "Entire Museeks library · {0} matches"
+msgstr ""
+
+#: src/components/HarmonicMatches.tsx:95
+msgid "Standard keys:"
+msgstr ""
+
+#: src/components/HarmonicMatches.tsx:105
+msgid "Adventurous transitions"
+msgstr ""
+
+#: src/components/HarmonicMatches.tsx:109
+msgid "Experimental +2 / +7 Camelot jumps:"
+msgstr ""
+
+#: src/components/HarmonicMatches.tsx:111
+msgid "Audition these transitions; they are not standard harmonic matches."
+msgstr ""
+
+#: src/components/HarmonicMatches.tsx:117
+msgid "Search compatible tracks"
+msgstr ""
+
+#: src/components/HarmonicMatches.tsx:118
+msgid "Search compatible tracks…"
+msgstr ""
+
+#: src/components/HarmonicMatches.tsx:126
+msgid "Compatible track order"
+msgstr ""
+
+#: src/components/HarmonicMatches.tsx:135
+msgid "Energy: low to high"
+msgstr ""
+
+#: src/components/HarmonicMatches.tsx:136
+msgid "Energy: high to low"
+msgstr ""
+
 #: src/components/Header.tsx:26
 msgid "Header"
 msgstr ""
@@ -211,6 +281,62 @@ msgstr ""
 #: src/components/Header.tsx:64
 msgid "Queue"
 msgstr "Cola"
+
+#: src/components/LibraryTagFilters.tsx:44
+msgid "Filter by Finder tags"
+msgstr ""
+
+#: src/components/LibraryTagFilters.tsx:49
+msgid "Show tracks missing genre or energy"
+msgstr ""
+
+#: src/components/LibraryTagFilters.tsx:58
+msgid "Needs tagging"
+msgstr ""
+
+#: src/components/LibraryTagFilters.tsx:61
+#: src/components/TrackListHeader.tsx:93
+#: src/routes/tracks.$trackID.tsx:139
+msgid "Genre"
+msgstr "Género"
+
+#: src/components/LibraryTagFilters.tsx:69
+#: src/components/LibraryTagFilters.tsx:95
+msgid "Any"
+msgstr ""
+
+#: src/components/LibraryTagFilters.tsx:70
+#: src/components/LibraryTagFilters.tsx:96
+msgid "Untagged"
+msgstr ""
+
+#: src/components/LibraryTagFilters.tsx:79
+msgid "Energy"
+msgstr ""
+
+#: src/components/LibraryTagFilters.tsx:109
+msgid "Clear filters"
+msgstr ""
+
+#: src/components/LibraryTagFilters.tsx:111
+msgid "Reading tags…"
+msgstr ""
+
+#: src/components/LibraryTagFilters.tsx:111
+msgid "Refresh tags"
+msgstr ""
+
+#: src/components/LibraryTagFilters.tsx:118
+msgid "Some Finder tags could not be read. Those tracks are excluded from tag filters. Check that your music files are available, then refresh tags."
+msgstr ""
+
+#: src/components/LibraryTagFilters.tsx:122
+msgid "Could not load the genre list."
+msgstr ""
+
+#: src/components/LibraryTagFilters.tsx:125
+msgid "Retry"
+msgstr ""
 
 #: src/components/Navigation.tsx:48
 msgid "Main navigation"
@@ -249,15 +375,15 @@ msgstr "escaneando pistas..."
 msgid "Previous"
 msgstr "Anterior"
 
-#: src/components/PlayerControls.tsx:24
+#: src/components/PlayerControls.tsx:25
 msgid "Play"
 msgstr "Reproducir"
 
-#: src/components/PlayerControls.tsx:24
+#: src/components/PlayerControls.tsx:25
 msgid "Pause"
 msgstr "Pausa"
 
-#: src/components/PlayerControls.tsx:30
+#: src/components/PlayerControls.tsx:31
 msgid "Next"
 msgstr "Siguiente"
 
@@ -272,6 +398,46 @@ msgstr "limpiar cola"
 #: src/components/QueueList.tsx:105
 msgid "see more"
 msgstr "ver más"
+
+#: src/components/RekordboxSource.tsx:18
+msgid "Choose Rekordbox XML export"
+msgstr ""
+
+#. placeholder {0}: Object.keys(data.tracks).length
+#. placeholder {1}: new Date(data.modified_ms).toLocaleString()
+#: src/components/RekordboxSource.tsx:38
+msgid "{0} files · Export updated {1}"
+msgstr ""
+
+#: src/components/RekordboxSource.tsx:39
+msgid "Connect an XML export to see keys and find compatible tracks."
+msgstr ""
+
+#: src/components/RekordboxSource.tsx:46
+msgid "Change XML"
+msgstr ""
+
+#: src/components/RekordboxSource.tsx:46
+msgid "Connect XML"
+msgstr ""
+
+#: src/components/RekordboxSource.tsx:53
+msgid "Refresh keys"
+msgstr ""
+
+#. placeholder {0}: String(source.error ?? query.error)
+#: src/components/RekordboxSource.tsx:58
+msgid "Could not read Rekordbox XML: {0}"
+msgstr ""
+
+#: src/components/RekordboxSource.tsx:59
+msgid "Showing the last successful export."
+msgstr ""
+
+#. placeholder {0}: data.skipped
+#: src/components/RekordboxSource.tsx:63
+msgid "{0} entries without local file paths were skipped."
+msgstr ""
 
 #: src/components/Search.tsx:42
 msgid "search..."
@@ -289,83 +455,87 @@ msgstr ""
 msgid "Rename"
 msgstr "Renombrar"
 
-#: src/components/TrackList.tsx:243
+#: src/components/TrackList.tsx:263
 msgid "Create new playlist..."
 msgstr "Crear nueva lista..."
 
-#: src/components/TrackList.tsx:246
+#: src/components/TrackList.tsx:265
 #: src/routes/playlists.tsx:63
 msgid "New playlist"
 msgstr "Nueva lista"
 
-#: src/components/TrackList.tsx:259
+#: src/components/TrackList.tsx:276
 msgid "No playlists"
 msgstr "Sin listas de reproducción"
 
-#. placeholder {0}: selectedTracks.size
+#. placeholder {0}: selection.size
 #. placeholder {1}: playlist.name
-#: src/components/TrackList.tsx:273
+#: src/components/TrackList.tsx:290
 msgid "{0} track(s) were added to \"{1}\""
 msgstr "{0} pista(s) añadida(s) a \"{1}\""
 
-#: src/components/TrackList.tsx:291
+#: src/components/TrackList.tsx:308
 msgid "{selectedCount, plural, one {# track selected} other {# tracks selected}}"
 msgstr "{selectedCount, plural, one {# pista seleccionada} other {# pistas seleccionadas}}"
 
-#: src/components/TrackList.tsx:303
+#: src/components/TrackList.tsx:319
+msgid "Find compatible tracks"
+msgstr ""
+
+#: src/components/TrackList.tsx:332
 msgid "Add to queue"
 msgstr "Añadir a la cola"
 
-#: src/components/TrackList.tsx:311
+#: src/components/TrackList.tsx:340
 msgid "Play next"
 msgstr "Reproducir siguiente"
 
-#: src/components/TrackList.tsx:323
+#: src/components/TrackList.tsx:352
 msgid "Add to playlist"
 msgstr "Añadir a lista de reproducción"
 
-#: src/components/TrackList.tsx:333
+#: src/components/TrackList.tsx:362
 msgid "Search for \"{item}\""
 msgstr "Buscar \"{item}\""
 
-#: src/components/TrackList.tsx:346
+#: src/components/TrackList.tsx:375
 msgid "Copy \"{item}\""
 msgstr "Copiar \"{item}\""
 
-#: src/components/TrackList.tsx:369
+#: src/components/TrackList.tsx:398
 msgid "Edit track"
 msgstr "Editar pista"
 
-#: src/components/TrackList.tsx:379
+#: src/components/TrackList.tsx:408
 msgid "Show in file manager"
 msgstr "Mostrar en el explorador de archivos"
 
-#: src/components/TrackList.tsx:385
+#: src/components/TrackList.tsx:414
 msgid "Remove from library"
 msgstr "Eliminar de la biblioteca"
 
-#. placeholder {0}: selectedTracks.size
-#: src/components/TrackList.tsx:388
+#. placeholder {0}: selection.size
+#: src/components/TrackList.tsx:417
 msgid "Are you sure you want to remove {0} track(s) from your library?"
 msgstr "¿Estás seguro de que quieres eliminar {0} pista(s) de tu biblioteca?"
 
-#: src/components/TrackList.tsx:390
+#: src/components/TrackList.tsx:419
 msgid "Remove tracks"
 msgstr "Eliminar pistas"
 
-#: src/components/TrackList.tsx:392
+#: src/components/TrackList.tsx:421
 #: src/routes/settings.library.tsx:100
 #: src/routes/settings.library.tsx:145
 #: src/routes/tracks.$trackID.tsx:257
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: src/components/TrackList.tsx:393
+#: src/components/TrackList.tsx:422
 #: src/routes/settings.library.tsx:64
 msgid "Remove"
 msgstr "Eliminar"
 
-#: src/components/TrackListDefault.tsx:124
+#: src/components/TrackListDefault.tsx:148
 #: src/components/TrackListGrouped.tsx:58
 msgid "Track list"
 msgstr ""
@@ -377,58 +547,78 @@ msgstr ""
 msgid "{0, plural, one {# track} other {# tracks}}"
 msgstr "{0, plural, one {# pista} other {# pistas}}"
 
-#: src/components/TrackListHeader.tsx:17
+#: src/components/TrackListHeader.tsx:26
 msgid "Track list sorting options"
 msgstr ""
 
-#: src/components/TrackListHeader.tsx:26
+#: src/components/TrackListHeader.tsx:44
 #: src/routes/tracks.$trackID.tsx:88
 msgid "Title"
 msgstr "Título"
 
-#: src/components/TrackListHeader.tsx:31
+#: src/components/TrackListHeader.tsx:49
+msgid "RB / Key"
+msgstr ""
+
+#: src/components/TrackListHeader.tsx:66
 #: src/routes/tracks.$trackID.tsx:241
 msgid "Duration"
 msgstr "Duración"
 
-#: src/components/TrackListHeader.tsx:36
+#: src/components/TrackListHeader.tsx:75
 msgid "Artist"
 msgstr "Artista"
 
-#: src/components/TrackListHeader.tsx:41
+#: src/components/TrackListHeader.tsx:84
 #: src/routes/tracks.$trackID.tsx:99
 msgid "Album"
 msgstr "Álbum"
 
-#: src/components/TrackListHeader.tsx:46
-#: src/routes/tracks.$trackID.tsx:139
-msgid "Genre"
-msgstr "Género"
+#: src/components/TrackListHeader.tsx:104
+msgid "Museek Genre and Energy"
+msgstr ""
 
-#: src/components/TrackListStates.tsx:25
+#: src/components/TrackListHeaderCell.tsx:109
+msgid "Resize {title}"
+msgstr ""
+
+#: src/components/TrackListHeaderCell.tsx:115
+msgid "Drag to resize. Double-click to reset. Use arrow keys to adjust."
+msgstr ""
+
+#: src/components/TrackListStates.tsx:26
 msgid "Loading library..."
 msgstr "Cargando biblioteca..."
 
-#: src/components/TrackListStates.tsx:36
+#: src/components/TrackListStates.tsx:37
 msgid "Your library is being scanned"
 msgstr "Tu biblioteca se está escaneando"
 
-#: src/components/TrackListStates.tsx:39
+#: src/components/TrackListStates.tsx:40
 msgid "hold on..."
 msgstr "un momento..."
 
-#: src/components/TrackListStates.tsx:50
+#: src/components/TrackListStates.tsx:60
 msgid "There is no music in your library"
 msgstr "No hay música en tu biblioteca"
 
-#: src/components/TrackListStates.tsx:53
+#: src/components/TrackListStates.tsx:63
 msgid "you can <0>add your music here</0>"
 msgstr "puedes <0>añadir tu música aquí</0>"
 
-#: src/components/TrackListStates.tsx:69
+#: src/components/TrackListStates.tsx:79
 #: src/routes/playlists.$playlistID.tsx:104
 msgid "Your search returned no results"
 msgstr "Tu búsqueda no arrojó resultados"
+
+#. placeholder {0}: props.rekordbox.key ?? '—'
+#: src/components/TrackRow.tsx:156
+msgid "In Rekordbox export · Key: {0}"
+msgstr ""
+
+#: src/components/TrackRow.tsx:157
+msgid "Not found in the connected Rekordbox export"
+msgstr ""
 
 #: src/components/VolumeControl.tsx:47
 #: src/components/VolumeControl.tsx:74
@@ -441,6 +631,14 @@ msgstr ""
 
 #: src/routes/artists.tsx:70
 msgid "Compilations"
+msgstr ""
+
+#: src/routes/library.tsx:103
+msgid "Library tracks"
+msgstr ""
+
+#: src/routes/library.tsx:142
+msgid "No tracks match these tag filters and search."
 msgstr ""
 
 #: src/routes/playlists.$playlistID.tsx:72

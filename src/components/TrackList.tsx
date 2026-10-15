@@ -17,11 +17,19 @@ import Keybinding from 'react-keybinding-component';
 
 import LibraryAPI from '../api/LibraryAPI';
 import PlaylistsAPI from '../api/PlaylistsAPI';
-import type { Config, Playlist, Track, TrackGroup } from '../generated/typings';
+import type {
+  Config,
+  FinderTags,
+  Playlist,
+  Track,
+  TrackGroup,
+} from '../generated/typings';
 import useInvalidate from '../hooks/useInvalidate';
 import usePlayingTrackID from '../hooks/usePlayingTrackID';
+import useRekordbox from '../hooks/useRekordbox';
 import BridgeDatabase from '../lib/bridge-database';
 import player from '../lib/player';
+import { camelotKey, trackRekordbox } from '../lib/rekordbox';
 import {
   getScrollPosition,
   saveScrollPosition,
@@ -40,8 +48,10 @@ import TrackListGrouped from './TrackListGrouped';
 
 type TrackListProps = {
   playlists: Playlist[];
+  finderTags?: Record<string, FinderTags>;
   tracksDensity: Config['track_view_density'];
   reorderable?: boolean;
+  secondary?: boolean;
   onReorder?: (tracks: Track[]) => void;
   queueOrigin: QueueOrigin;
   // For View-specific context menus
@@ -91,6 +101,7 @@ export default function TrackList(props: Props) {
   }, [data, layout]);
 
   const trackPlayingID = usePlayingTrackID();
+  const rekordbox = useRekordbox();
   const { t } = useLingui();
 
   const [selectedTracks, setSelectedTracks] = useState<Set<string>>(new Set());
@@ -98,7 +109,8 @@ export default function TrackList(props: Props) {
   const navigate = useNavigate();
   const invalidate = useInvalidate();
   const searchParams = useSearch({ from: '__root__' });
-  const shouldJumpToPlayingTrack = searchParams.jump_to_playing_track === true;
+  const shouldJumpToPlayingTrack =
+    searchParams.jump_to_playing_track === true && !props.secondary;
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -109,7 +121,7 @@ export default function TrackList(props: Props) {
 
   // Persist scroll position
   useEffect(() => {
-    const target = virtualizer?.scrollElement;
+    const target = props.secondary ? undefined : virtualizer?.scrollElement;
 
     function onSaveScrollPosition() {
       if (target?.scrollTop != null) {
@@ -122,12 +134,15 @@ export default function TrackList(props: Props) {
     return function cleanup() {
       target?.removeEventListener('scroll', onSaveScrollPosition);
     };
-  }, [virtualizer]);
+  }, [virtualizer, props.secondary]);
 
   // Highlight playing track and scroll to it
   useEffect(() => {
     if (shouldJumpToPlayingTrack && trackPlayingID) {
-      void navigate({ to: '.', search: { jump_to_playing_track: false } });
+      void navigate({
+        to: '.',
+        search: (previous) => ({ ...previous, jump_to_playing_track: false }),
+      });
       setSelectedTracks(new Set([trackPlayingID]));
 
       const playingTrackIndex = tracks.findIndex(
@@ -158,6 +173,7 @@ export default function TrackList(props: Props) {
    */
   const onKeyEvent = useCallback(
     (event: KeyboardEvent) => {
+      if ((event.target as HTMLElement).closest('[role="separator"]')) return;
       // Prevent this from happening when the focus is outside of the track list
       const firstSelectedTrackIndex = tracks.findIndex((track) =>
         selectedTracks.has(track.id),
@@ -227,7 +243,11 @@ export default function TrackList(props: Props) {
     async (event: React.MouseEvent, _trackID: string, index: number) => {
       event.preventDefault();
 
-      const selectedCount = selectedTracks.size;
+      const selection = selectedTracks.has(_trackID)
+        ? selectedTracks
+        : new Set([_trackID]);
+      setSelectedTracks(selection);
+      const selectedCount = selection.size;
       const track = tracks[index];
       const currentPlaylistID =
         queueOrigin.type === 'playlist' ? queueOrigin.playlistID : null;
@@ -242,10 +262,7 @@ export default function TrackList(props: Props) {
         MenuItem.new({
           text: t`Create new playlist...`,
           async action() {
-            await PlaylistsAPI.create(
-              t`New playlist`,
-              Array.from(selectedTracks),
-            );
+            await PlaylistsAPI.create(t`New playlist`, Array.from(selection));
             await invalidate();
           },
         }),
@@ -266,11 +283,11 @@ export default function TrackList(props: Props) {
               async action() {
                 await PlaylistsAPI.addTracks(
                   playlist.id,
-                  Array.from(selectedTracks),
+                  Array.from(selection),
                 );
 
                 toastManager.add({
-                  title: t`${selectedTracks.size} track(s) were added to "${playlist.name}"`,
+                  title: t`${selection.size} track(s) were added to "${playlist.name}"`,
                   type: 'success',
                 });
               },
@@ -298,12 +315,24 @@ export default function TrackList(props: Props) {
           text: '?',
           item: 'Separator',
         }),
+        MenuItem.new({
+          text: t`Find compatible tracks`,
+          enabled: Boolean(
+            camelotKey(trackRekordbox(track, rekordbox.entries)?.key),
+          ),
+          action: () => {
+            void navigate({
+              to: '/library',
+              search: (previous) => ({ ...previous, match: track.id }),
+            });
+          },
+        }),
         // Queue Management
         MenuItem.new({
           text: t`Add to queue`,
           async action() {
             player.addToQueue(
-              await BridgeDatabase.getTracks(Array.from(selectedTracks)),
+              await BridgeDatabase.getTracks(Array.from(selection)),
             );
           },
         }),
@@ -311,7 +340,7 @@ export default function TrackList(props: Props) {
           text: t`Play next`,
           async action() {
             player.addNextInQueue(
-              await BridgeDatabase.getTracks(Array.from(selectedTracks)),
+              await BridgeDatabase.getTracks(Array.from(selection)),
             );
           },
         }),
@@ -357,7 +386,7 @@ export default function TrackList(props: Props) {
           ...extraContextMenu.map((item) =>
             MenuItem.new({
               text: item.label,
-              action: () => item.action(selectedTracks),
+              action: () => item.action(selection),
             }),
           ),
         );
@@ -385,7 +414,7 @@ export default function TrackList(props: Props) {
           text: t`Remove from library`,
           action: async () => {
             const confirm = await ask(
-              t`Are you sure you want to remove ${selectedTracks.size} track(s) from your library?`,
+              t`Are you sure you want to remove ${selection.size} track(s) from your library?`,
               {
                 title: t`Remove tracks`,
                 kind: 'warning',
@@ -395,7 +424,7 @@ export default function TrackList(props: Props) {
             );
 
             if (confirm) {
-              await LibraryAPI.removeTracks(Array.from(selectedTracks));
+              await LibraryAPI.removeTracks(Array.from(selection));
               await invalidate();
             }
           },
@@ -416,6 +445,7 @@ export default function TrackList(props: Props) {
       navigate,
       invalidate,
       extraContextMenu,
+      rekordbox.entries,
       t,
     ],
   );
@@ -436,12 +466,16 @@ export default function TrackList(props: Props) {
       />
       {layout === 'default' && (
         <TrackListDefault
+          finderTags={props.finderTags}
+          rekordbox={rekordbox.data ? rekordbox.entries : undefined}
+          sortable={!props.secondary}
+          listLabel={props.secondary ? t`Compatible tracks` : undefined}
           ref={scrollableRef}
           tracks={data}
           rowHeight={rowHeight}
           selectedTracks={selectedTracks}
           reorderable={reorderable}
-          initialOffset={getScrollPosition()}
+          initialOffset={props.secondary ? 0 : getScrollPosition()}
           onReorder={onReorder}
           onTrackSelect={onTrackSelect}
           onContextMenu={onContextMenu}
@@ -454,7 +488,7 @@ export default function TrackList(props: Props) {
           trackGroups={data}
           rowHeight={rowHeight}
           selectedTracks={selectedTracks}
-          initialOffset={getScrollPosition()}
+          initialOffset={props.secondary ? 0 : getScrollPosition()}
           showArtistInTitle={showArtistInTitle || undefined}
           onTrackSelect={onTrackSelect}
           onContextMenu={onContextMenu}

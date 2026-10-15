@@ -3,6 +3,7 @@ import * as stylex from '@stylexjs/stylex';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import GenreBridge from '../lib/bridge-genre';
+import { updateFinderTagCache } from '../lib/finder-tags';
 import toastManager from '../lib/toast-manager';
 
 export default function GenreTag({ path }: { path: string }) {
@@ -27,6 +28,7 @@ export default function GenreTag({ path }: { path: string }) {
     },
     onSuccess: (_, value) => {
       queryClient.setQueryData(queryKey, value);
+      return updateFinderTagCache(queryClient, path, { genre: value });
     },
     onError: (error) => {
       toastManager.add({

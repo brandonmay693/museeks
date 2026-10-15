@@ -28,6 +28,7 @@ pub enum SortBy {
     Title,
     Duration,
     Genre,
+    Energy,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, TS)]
@@ -72,6 +73,7 @@ pub struct Config {
     pub library_sort_order: SortOrder,
     pub library_folders: Vec<PathBuf>,
     pub library_autorefresh: bool,
+    pub rekordbox_xml_path: Option<String>,
     pub sleepblocker: bool,
     pub auto_update_checker: bool,
     pub notifications: bool,
@@ -104,6 +106,7 @@ impl Default for Config {
             library_sort_order: SortOrder::Asc,
             library_folders: vec![],
             library_autorefresh: false,
+            rekordbox_xml_path: None,
             sleepblocker: false,
             auto_update_checker: true,
             notifications: false,

@@ -1,6 +1,7 @@
 /* Colors (default theme) */
 :root {
-  --main-color: hsl(208, 77%, 59%);
+  --main-color: #fcb514;
+  --on-main-color: #000000;
   --focus-color: color-mix(in srgb, var(--main-color) 80%, white);
   --link-color: var(--main-color);
   --bold: 600;
@@ -82,5 +83,5 @@ p {
 /* Active state of some elements that get de-emphasized, is not focused */
 [data-museeks-list]:focus-within {
   --active-item-bg: var(--main-color);
-  --active-item-color: white;
+  --active-item-color: var(--on-main-color);
 }

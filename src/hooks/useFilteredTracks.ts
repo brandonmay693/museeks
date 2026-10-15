@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 
 import type {
+  FinderTags,
   SortBy,
   SortOrder,
   Track,
@@ -21,6 +22,7 @@ export default function useFilteredTracks(
   tracks: Array<Track>,
   sortBy?: SortBy,
   sortOrder?: SortOrder,
+  finderTags?: Record<string, FinderTags>,
 ): Array<Track> {
   const search = useLibraryStore((state) => stripAccents(state.search));
 
@@ -32,13 +34,13 @@ export default function useFilteredTracks(
       // sorting being a costly operation, do it after filtering, ignore it if not needed
       searchedTracks = sortTracks(
         searchedTracks,
-        getSortOrder(sortBy),
+        getSortOrder(sortBy, sortOrder, finderTags),
         sortOrder,
       );
     }
 
     return searchedTracks;
-  }, [tracks, search, sortBy, sortOrder]);
+  }, [tracks, search, sortBy, sortOrder, finderTags]);
 }
 
 /**

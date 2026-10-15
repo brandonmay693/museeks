@@ -20,6 +20,7 @@ export default function useInvalidate() {
       // Invalidate queries so data is refetched and the UI shows a loading state
       // instead of a misleading "no tracks in the library" message
       queryClient.invalidateQueries({ queryKey: allTracksQuery.queryKey }),
+      queryClient.invalidateQueries({ queryKey: ['finder-tags'] }),
       queryClient.invalidateQueries({ queryKey: configQuery.queryKey }),
       // Reload the route data
       router.invalidate(),

@@ -9,6 +9,7 @@ type Props = {
   isLoading: boolean;
   tracks: Array<Track> | Array<TrackGroup>;
   children?: React.ReactNode;
+  emptyMessage?: string;
 };
 
 export default function TrackListStates(props: Props) {
@@ -38,6 +39,15 @@ export default function TrackListStates(props: Props) {
         <ViewMessage.Sub>
           <Trans>hold on...</Trans>
         </ViewMessage.Sub>
+      </ViewMessage.Notice>
+    );
+  }
+
+  // Empty library
+  if (tracks.length === 0 && props.emptyMessage) {
+    return (
+      <ViewMessage.Notice>
+        <p>{props.emptyMessage}</p>
       </ViewMessage.Notice>
     );
   }

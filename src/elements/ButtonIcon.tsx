@@ -40,7 +40,7 @@ const styles = stylex.create({
     backgroundColor: 'transparent',
     borderStyle: 'none',
     borderWidth: '0',
-    color: 'var(--text)',
+    color: 'inherit',
     textAlign: 'center',
     padding: '0',
     lineHeight: 1,

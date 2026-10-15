@@ -27,7 +27,12 @@ fn main() {
                     "get_genres",
                     "get_genre",
                     "set_genre",
+                    "get_finder_tags",
                 ]),
+            )
+            .plugin(
+                "rekordbox",
+                tauri_build::InlinedPlugin::new().commands(&["get_snapshot", "set_source"]),
             )
             .plugin(
                 "database",

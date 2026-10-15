@@ -161,6 +161,12 @@ const styles = stylex.create({
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
+    boxShadow: {
+      '[data-status="active"]': 'inset 3px 0 var(--main-color)',
+    },
+    fontWeight: {
+      '[data-status="active"]': 700,
+    },
     cursor: 'pointer',
     paddingBlock: '8px',
     paddingInline: '12px',

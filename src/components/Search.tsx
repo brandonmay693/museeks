@@ -85,7 +85,7 @@ const styles = stylex.create({
     borderWidth: '1px',
     borderStyle: 'solid',
     borderColor: 'var(--border-color)',
-    color: 'var(--text)',
+    color: 'var(--header-color)',
     borderRadius: 'var(--border-radius)',
     lineHeight: '16px',
   },
@@ -97,7 +97,7 @@ const styles = stylex.create({
     right: '4px',
     zIndex: 10, // to be above the input, even when focused
     fontSize: '15px',
-    color: 'var(--text)',
+    color: 'var(--header-color)',
     cursor: 'pointer',
     borderStyle: 'none',
     backgroundColor: 'transparent',

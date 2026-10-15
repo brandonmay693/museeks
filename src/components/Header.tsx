@@ -95,7 +95,9 @@ const styles = stylex.create({
     boxSizing: 'border-box',
     borderBottomWidth: '1px',
     borderBottomStyle: 'solid',
-    borderBottomColor: 'var(--border-color)',
+    borderBottomColor: 'var(--main-color)',
+    boxShadow:
+      '0 1px 12px color-mix(in srgb, var(--main-color) 12%, transparent)',
     backgroundColor: 'var(--header-bg)',
     color: 'var(--header-color)',
     paddingTop: 0,

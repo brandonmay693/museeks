@@ -134,7 +134,8 @@ mod tests {
             std::fs::write(directory.join(filename), b"fixture").unwrap();
         }
         let mut actual = scan_dir(&directory, &SUPPORTED_TRACKS_EXTENSIONS);
-        let mut expected: Vec<PathBuf> = filenames.iter().map(|name| directory.join(name)).collect();
+        let mut expected: Vec<PathBuf> =
+            filenames.iter().map(|name| directory.join(name)).collect();
         actual.sort();
         expected.sort();
         std::fs::remove_dir_all(&directory).unwrap();

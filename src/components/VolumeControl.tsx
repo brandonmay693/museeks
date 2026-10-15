@@ -104,6 +104,7 @@ const styles = stylex.create({
   },
   volumeHoverCard: {
     backgroundColor: 'var(--header-bg)',
+    color: 'var(--header-color)',
     paddingBlock: '10px',
     paddingInline: '12px',
     borderWidth: '1px',

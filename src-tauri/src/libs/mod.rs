@@ -16,3 +16,5 @@ pub mod track;
 #[cfg(test)]
 #[path = "./tests/database_tests.rs"]
 mod database_tests;
+
+pub mod rekordbox;

@@ -16,6 +16,7 @@ export const MOCK_CONFIG: Config = {
   library_sort_order: 'Asc',
   library_folders: ['/home/user/music'],
   library_autorefresh: false,
+  rekordbox_xml_path: null,
   sleepblocker: false,
   auto_update_checker: true,
   notifications: false,

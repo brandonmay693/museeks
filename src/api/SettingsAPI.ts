@@ -14,7 +14,7 @@ import toastManager from '../lib/toast-manager';
 import { logAndNotifyError } from '../lib/utils';
 import LibraryAPI from './LibraryAPI';
 
-export const DEFAULT_MAIN_COLOR = '#459ce7';
+export const DEFAULT_MAIN_COLOR = '#FCB514';
 
 /**
  * THIS WHOLE MODULE IS DEPRECATED as it has organically grown into something weird
@@ -124,7 +124,24 @@ const setUIMainColor = async (
 };
 
 const applyUIMainColorToUI = (mainColor: Config['ui_accent_color']) => {
-  document.documentElement.style.setProperty('--main-color', mainColor);
+  const color = mainColor ?? DEFAULT_MAIN_COLOR;
+  const rgb = /^#([0-9a-f]{6})$/i.exec(color);
+  const channels = rgb
+    ? [0, 2, 4].map((offset) => {
+        const value = parseInt(rgb[1].slice(offset, offset + 2), 16) / 255;
+        return value <= 0.04045
+          ? value / 12.92
+          : ((value + 0.055) / 1.055) ** 2.4;
+      })
+    : [1, 1, 1];
+  const luminance =
+    channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722;
+  const root = document.documentElement;
+  root.style.setProperty('--main-color', color);
+  root.style.setProperty(
+    '--on-main-color',
+    luminance > 0.179 ? '#000000' : '#FFFFFF',
+  );
 };
 
 /**

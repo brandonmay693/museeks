@@ -21,6 +21,7 @@ export default function PlayerControls() {
       <ButtonIcon
         icon={isPaused ? 'play' : 'pause'}
         iconSize={28}
+        xstyle={styles.playButton}
         label={isPaused ? t`Play` : t`Pause`}
         onClick={() => player.playPause()}
       />
@@ -36,6 +37,15 @@ export default function PlayerControls() {
 }
 
 const styles = stylex.create({
+  playButton: {
+    backgroundColor: 'var(--main-color)',
+    color: 'var(--on-main-color)',
+    width: '36px',
+    height: '36px',
+    borderRadius: '50%',
+    boxShadow:
+      '0 0 18px color-mix(in srgb, var(--main-color) 20%, transparent)',
+  },
   playerControls: {
     display: 'flex',
     alignItems: 'center',

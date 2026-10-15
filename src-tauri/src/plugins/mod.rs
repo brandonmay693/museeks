@@ -27,3 +27,5 @@ pub mod db;
 pub mod default_view;
 pub mod sleepblocker;
 pub mod stream_server;
+
+pub mod rekordbox;

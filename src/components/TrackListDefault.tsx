@@ -11,9 +11,11 @@ import type React from 'react';
 import { useCallback, useId, useImperativeHandle, useRef } from 'react';
 
 import Scrollable from '../elements/Scrollable';
-import type { Track } from '../generated/typings';
+import type { FinderTags, RekordboxTrack, Track } from '../generated/typings';
 import useDndSensors from '../hooks/useDnDSensors';
+import useFinderTags from '../hooks/useFinderTags';
 import usePlayingTrackID from '../hooks/usePlayingTrackID';
+import useTrackColumnWidths from '../hooks/useTrackColumnWidths';
 import type { TrackListVirtualizer } from '../types/museeks';
 import TrackListHeader from './TrackListHeader';
 import TrackRow, { type TrackRowEvents } from './TrackRow';
@@ -29,7 +31,11 @@ const DND_MODIFIERS = [restrictToVerticalAxis];
 type Props = {
   ref: React.RefObject<TrackListVirtualizer | null>;
   tracks: Track[];
+  finderTags?: Record<string, FinderTags>;
   reorderable?: boolean;
+  rekordbox?: Record<string, RekordboxTrack>;
+  sortable?: boolean;
+  listLabel?: string;
   selectedTracks: Set<string>;
   initialOffset: number;
   rowHeight: number;
@@ -51,9 +57,21 @@ export default function TrackListDefault(props: Props) {
   } = props;
 
   const { t } = useLingui();
+  const showFinderTags = window.__MUSEEKS_PLATFORM === 'macos';
+  const loadedTags = useFinderTags(
+    tracks,
+    showFinderTags && props.finderTags === undefined,
+  );
+  const finderTags = props.finderTags ?? loadedTags.tags;
 
   const trackPlayingID = usePlayingTrackID();
   const innerScrollableRef = useRef<HTMLDivElement>(null);
+
+  const columns = useTrackColumnWidths(
+    innerScrollableRef,
+    showFinderTags,
+    !!props.rekordbox,
+  );
 
   const virtualizer = useVirtualizer({
     count: tracks.length,
@@ -115,58 +133,70 @@ export default function TrackListDefault(props: Props) {
       sensors={sensors}
     >
       <Scrollable ref={innerScrollableRef}>
-        <TrackListHeader sortable={!reorderable} />
+        <div style={{ minWidth: columns.totalWidth }}>
+          <TrackListHeader
+            columns={columns}
+            sortable={!reorderable && props.sortable !== false}
+            showRekordbox={!!props.rekordbox}
+            showFinderTags={showFinderTags}
+          />
 
-        {/* The large inner element to hold all of the items */}
-        <ul
-          role="listbox"
-          aria-multiselectable="true"
-          aria-label={t`Track list`}
-          {...stylex.props(styles.rows)}
-          style={{
-            height: `${virtualizer.getTotalSize()}px`,
-          }}
-        >
-          <SortableContext
-            items={tracks}
-            strategy={verticalListSortingStrategy}
+          {/* The large inner element to hold all of the items */}
+          <ul
+            role="listbox"
+            aria-multiselectable="true"
+            aria-label={props.listLabel ?? t`Track list`}
+            {...stylex.props(styles.rows)}
+            style={{
+              height: `${virtualizer.getTotalSize()}px`,
+            }}
           >
-            {/* Only the visible items in the virtualizer, manually positioned to be in view */}
-            {virtualizer.getVirtualItems().map((virtualItem) => {
-              const track = tracks[virtualItem.index];
-              return (
-                <TrackRow
-                  key={virtualItem.key}
-                  selected={selectedTracks.has(track.id)}
-                  track={track}
-                  isPlaying={trackPlayingID === track.id}
-                  index={virtualItem.index}
-                  rowNumber={virtualItem.index + 1}
-                  onTrackSelect={onTrackSelect}
-                  onContextMenu={onContextMenu}
-                  onPlaybackStart={onPlaybackStart}
-                  draggable={reorderable}
-                  hasSelectedAbove={
-                    virtualItem.index > 0 &&
-                    selectedTracks.has(tracks[virtualItem.index - 1].id)
-                  }
-                  style={{
-                    position: 'absolute',
-                    left: 0,
-                    width: '100%',
-                    height: `${virtualItem.size}px`,
-                    // Intentionally not translateY, as it would create another paint
-                    // layer where every row would cover elements from the previous one.
-                    // This would typically prevent the drop effect to be properly displayed
-                    // when reordering a playlist
-                    top: `${virtualItem.start}px`,
-                    zIndex: 1,
-                  }}
-                />
-              );
-            })}
-          </SortableContext>
-        </ul>
+            <SortableContext
+              items={tracks}
+              strategy={verticalListSortingStrategy}
+            >
+              {/* Only the visible items in the virtualizer, manually positioned to be in view */}
+              {virtualizer.getVirtualItems().map((virtualItem) => {
+                const track = tracks[virtualItem.index];
+                return (
+                  <TrackRow
+                    key={virtualItem.key}
+                    selected={selectedTracks.has(track.id)}
+                    track={track}
+                    columnWidths={columns.widths}
+                    showRekordbox={!!props.rekordbox}
+                    rekordbox={props.rekordbox?.[track.path.normalize('NFC')]}
+                    showFinderTags={showFinderTags}
+                    finderTags={finderTags[track.path]}
+                    isPlaying={trackPlayingID === track.id}
+                    index={virtualItem.index}
+                    rowNumber={virtualItem.index + 1}
+                    onTrackSelect={onTrackSelect}
+                    onContextMenu={onContextMenu}
+                    onPlaybackStart={onPlaybackStart}
+                    draggable={reorderable}
+                    hasSelectedAbove={
+                      virtualItem.index > 0 &&
+                      selectedTracks.has(tracks[virtualItem.index - 1].id)
+                    }
+                    style={{
+                      position: 'absolute',
+                      left: 0,
+                      width: '100%',
+                      height: `${virtualItem.size}px`,
+                      // Intentionally not translateY, as it would create another paint
+                      // layer where every row would cover elements from the previous one.
+                      // This would typically prevent the drop effect to be properly displayed
+                      // when reordering a playlist
+                      top: `${virtualItem.start}px`,
+                      zIndex: 1,
+                    }}
+                  />
+                );
+              })}
+            </SortableContext>
+          </ul>
+        </div>
       </Scrollable>
     </DndContext>
   );

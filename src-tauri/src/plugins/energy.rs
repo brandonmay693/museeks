@@ -15,9 +15,14 @@ const GENRES: &[&str] = &[
     "Gqom",
     "Hip-Hop",
     "House",
+    "Indie Tech",
+    "Melodic Tech",
     "Minimal / Deep Tech",
+    "Pop",
     "Progressive House",
+    "Psy-Trance",
     "R&B",
+    "Reggae",
     "Tech House",
     "Techno",
     "Trance",
@@ -149,6 +154,48 @@ fn finder_tags(_path: &str, _tags: Option<&[String]>) -> Result<Vec<String>, Str
 // Serialize read/modify/write operations, including when playback changes mid-save.
 static TAG_LOCK: std::sync::Mutex<()> = std::sync::Mutex::new(());
 
+#[derive(Debug, serde::Serialize, ts_rs::TS)]
+#[ts(export, export_to = "../../src/generated/typings.ts")]
+pub struct FinderTags {
+    pub genre: Option<String>,
+    pub energy: Option<u8>,
+    pub error: Option<String>,
+}
+
+#[tauri::command]
+async fn get_finder_tags(
+    paths: Vec<String>,
+) -> Result<std::collections::HashMap<String, FinderTags>, String> {
+    if paths.len() > 100 {
+        return Err("Read Finder tags in batches of at most 100 tracks".into());
+    }
+    tauri::async_runtime::spawn_blocking(move || {
+        let mut result = std::collections::HashMap::new();
+        for path in paths {
+            // Release the lock between files so saving a playing track can proceed.
+            let _guard = TAG_LOCK.lock().map_err(|error| error.to_string())?;
+            let tags = match finder_tags(&path, None) {
+                Ok(tags) => FinderTags {
+                    genre: tags
+                        .iter()
+                        .find_map(|tag| genre_name(tag).map(str::to_string)),
+                    energy: tags.iter().find_map(|tag| energy_level(tag)),
+                    error: None,
+                },
+                Err(error) => FinderTags {
+                    genre: None,
+                    energy: None,
+                    error: Some(error),
+                },
+            };
+            result.insert(path, tags);
+        }
+        Ok(result)
+    })
+    .await
+    .map_err(|error| error.to_string())?
+}
+
 #[tauri::command]
 async fn get_energy(path: String) -> Result<Option<u8>, String> {
     tauri::async_runtime::spawn_blocking(move || {
@@ -182,7 +229,12 @@ async fn set_energy(path: String, level: Option<u8>) -> Result<(), String> {
 pub fn init<R: Runtime>() -> TauriPlugin<R> {
     Builder::<R>::new("energy")
         .invoke_handler(tauri::generate_handler![
-            get_energy, set_energy, get_genres, get_genre, set_genre
+            get_energy,
+            set_energy,
+            get_genres,
+            get_genre,
+            set_genre,
+            get_finder_tags
         ])
         .build()
 }
@@ -190,6 +242,41 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[cfg(target_os = "macos")]
+    #[tokio::test]
+    async fn batch_distinguishes_missing_tags_from_unreadable_files() {
+        let path = std::env::temp_dir().join(format!("museeks-tags-{}.mp3", uuid::Uuid::new_v4()));
+        std::fs::write(&path, b"audio content").unwrap();
+        let filename = path.to_str().unwrap().to_string();
+        let missing = format!("{}.missing", filename);
+        let tags = get_finder_tags(vec![filename.clone(), missing.clone()])
+            .await
+            .unwrap();
+        assert_eq!(tags[&filename].genre, None);
+        assert_eq!(tags[&filename].energy, None);
+        assert_eq!(tags[&filename].error, None);
+        assert!(tags[&missing].error.is_some());
+
+        set_genre(filename.clone(), Some("House".into()))
+            .await
+            .unwrap();
+        set_energy(filename.clone(), Some(7)).await.unwrap();
+        let tags = get_finder_tags(vec![filename.clone()]).await.unwrap();
+        assert_eq!(tags[&filename].genre.as_deref(), Some("House"));
+        assert_eq!(tags[&filename].energy, Some(7));
+        assert_eq!(tags[&filename].error, None);
+        std::fs::remove_file(path).unwrap();
+    }
+
+    #[tokio::test]
+    async fn rejects_oversized_tag_batches() {
+        assert!(
+            get_finder_tags(vec!["missing.mp3".into(); 101])
+                .await
+                .is_err()
+        );
+    }
 
     #[test]
     fn genre_changes_preserve_energy_and_other_tags() {

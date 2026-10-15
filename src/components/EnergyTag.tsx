@@ -3,6 +3,7 @@ import * as stylex from '@stylexjs/stylex';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import EnergyBridge from '../lib/bridge-energy';
+import { updateFinderTagCache } from '../lib/finder-tags';
 import toastManager from '../lib/toast-manager';
 
 export default function EnergyTag({ path }: { path: string }) {
@@ -21,6 +22,7 @@ export default function EnergyTag({ path }: { path: string }) {
     },
     onSuccess: (_, level) => {
       queryClient.setQueryData(queryKey, level);
+      return updateFinderTagCache(queryClient, path, { energy: level });
     },
     onError: (error) => {
       toastManager.add({
