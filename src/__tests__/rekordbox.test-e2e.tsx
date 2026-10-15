@@ -83,6 +83,18 @@ test.runIf(import.meta.env.PLATFORM === 'macos')(
     await expect
       .element(page.getByRole('banner'))
       .toHaveTextContent('Romantic Blues');
+    await pane.getByRole('button', { name: 'Play reference track' }).click();
+    await expect
+      .element(page.getByRole('banner'))
+      .toHaveTextContent('Whiskey Blues');
+    await expect
+      .element(
+        pane.getByRole('searchbox', { name: 'Search compatible tracks' }),
+      )
+      .toHaveValue('Romantic');
+    await expect
+      .element(matches.getByRole('option', { name: /Romantic Blues/ }))
+      .toBeVisible();
     await pane
       .getByRole('searchbox', { name: 'Search compatible tracks' })
       .fill('');

@@ -2,9 +2,11 @@ import { useLingui } from '@lingui/react/macro';
 import * as stylex from '@stylexjs/stylex';
 
 import Button from '../elements/Button';
+import ButtonIcon from '../elements/ButtonIcon';
 import type { Config, FinderTags, Playlist, Track } from '../generated/typings';
 import useRekordbox from '../hooks/useRekordbox';
 import { matchesFinderTags } from '../lib/finder-tags';
+import player from '../lib/player';
 import queryClient from '../lib/query-client';
 import {
   camelotKey,
@@ -13,6 +15,7 @@ import {
   trackRekordbox,
   type HarmonicSearch,
 } from '../lib/rekordbox';
+import { logAndNotifyError } from '../lib/utils';
 import {
   filterTracks,
   getSortOrder,
@@ -81,8 +84,36 @@ export default function HarmonicMatches(props: Props) {
       <div {...stylex.props(styles.heading)}>
         <div {...stylex.props(styles.title)}>
           <strong>{t`Compatible tracks`}</strong>
-          <div {...stylex.props(styles.reference)} title={reference?.title}>
-            {reference?.title ?? t`Track unavailable`} {key && `· ${key}`}
+          <div {...stylex.props(styles.referenceRow)}>
+            <span {...stylex.props(styles.reference)} title={reference?.title}>
+              {reference?.title ?? t`Track unavailable`} {key && `· ${key}`}
+            </span>
+            {reference && (
+              <ButtonIcon
+                icon="play"
+                iconSize={16}
+                label={t`Play reference track`}
+                xstyle={styles.referencePlay}
+                onClick={() => {
+                  const state = player.getState();
+                  const current =
+                    state.queueCursor === null
+                      ? undefined
+                      : state.queue[state.queueCursor];
+                  // Resume an already selected reference; otherwise audition it
+                  // ahead of the current compatible results.
+                  const playback =
+                    current?.id === reference.id
+                      ? player.play()
+                      : player.start(
+                          [reference, ...tracks],
+                          reference.id,
+                          QUEUE_ORIGIN,
+                        );
+                  void playback.catch(logAndNotifyError);
+                }}
+              />
+            )}
           </div>
         </div>
         <Button
@@ -199,12 +230,28 @@ const styles = stylex.create({
     borderTopColor: 'var(--main-color)',
   },
   title: { minWidth: 0 },
+  referenceRow: {
+    display: 'flex',
+    alignItems: 'center',
+    columnGap: '8px',
+    marginTop: '4px',
+    minWidth: 0,
+  },
+  referencePlay: {
+    flexShrink: 0,
+    width: '28px',
+    height: '28px',
+    borderRadius: '50%',
+    backgroundColor: 'var(--main-color)',
+    color: 'var(--on-main-color)',
+    cursor: 'pointer',
+  },
   reference: {
+    minWidth: 0,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
     color: 'var(--text-muted)',
-    marginTop: '4px',
   },
   tools: {
     padding: '10px',

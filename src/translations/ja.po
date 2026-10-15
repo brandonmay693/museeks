@@ -204,73 +204,77 @@ msgstr "<0>アプリを再読み込み</0>してみてください、"
 msgid "or if it happens again, please <0>report an issue</0>."
 msgstr "また同じことが起こった場合は、<0>問題を報告してください</0>。"
 
-#: src/components/HarmonicMatches.tsx:74
+#: src/components/HarmonicMatches.tsx:77
 msgid "The reference track is no longer in your library."
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:76
+#: src/components/HarmonicMatches.tsx:79
 msgid "This track has no recognized key in the connected Rekordbox export."
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:77
+#: src/components/HarmonicMatches.tsx:80
 msgid "No compatible tracks match these filters. Try clearing the filters or refreshing the XML export."
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:80
+#: src/components/HarmonicMatches.tsx:83
 msgid "Harmonic matches"
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:83
+#: src/components/HarmonicMatches.tsx:86
 #: src/components/TrackList.tsx:472
 msgid "Compatible tracks"
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:85
+#: src/components/HarmonicMatches.tsx:89
 msgid "Track unavailable"
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:90
+#: src/components/HarmonicMatches.tsx:95
+msgid "Play reference track"
+msgstr ""
+
+#: src/components/HarmonicMatches.tsx:121
 msgid "Close matches"
 msgstr ""
 
 #. placeholder {0}: tracks.length
-#: src/components/HarmonicMatches.tsx:93
+#: src/components/HarmonicMatches.tsx:124
 msgid "Entire Museeks library · {0} matches"
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:95
+#: src/components/HarmonicMatches.tsx:126
 msgid "Standard keys:"
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:105
+#: src/components/HarmonicMatches.tsx:136
 msgid "Adventurous transitions"
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:109
+#: src/components/HarmonicMatches.tsx:140
 msgid "Experimental +2 / +7 Camelot jumps:"
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:111
+#: src/components/HarmonicMatches.tsx:142
 msgid "Audition these transitions; they are not standard harmonic matches."
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:117
+#: src/components/HarmonicMatches.tsx:148
 msgid "Search compatible tracks"
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:118
+#: src/components/HarmonicMatches.tsx:149
 msgid "Search compatible tracks…"
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:126
+#: src/components/HarmonicMatches.tsx:157
 msgid "Compatible track order"
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:135
+#: src/components/HarmonicMatches.tsx:166
 msgid "Energy: low to high"
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:136
+#: src/components/HarmonicMatches.tsx:167
 msgid "Energy: high to low"
 msgstr ""
 
