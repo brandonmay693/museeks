@@ -32,19 +32,6 @@ export function usePlayingTrack(): Track | null {
   });
 }
 
-/**
- * Hook to get current playback time that updates frequently.
- * Uses useSyncExternalStore for optimal performance.
- */
-export function usePlayingTrackCurrentTime(): number {
-  return useSyncExternalStore(
-    (callback) => {
-      player.on('timeupdate', callback);
-      return () => {
-        player.off('timeupdate', callback);
-      };
-    },
-    () => player.getCurrentTime(),
-    () => player.getCurrentTime(),
-  );
-}
+// Audio.currentTime advances independently of React store notifications.
+// Share the event-driven timer instead of reading a live clock in getSnapshot.
+export { default as usePlayingTrackCurrentTime } from './usePlayingTrackCurrentTime';
