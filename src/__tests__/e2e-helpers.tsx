@@ -1,7 +1,7 @@
 import { i18n } from '@lingui/core';
 import { beforeEach, vi } from 'vite-plus/test';
+import { page, userEvent } from 'vite-plus/test/browser';
 import { render } from 'vitest-browser-react';
-import { page } from 'vitest/context';
 
 import type { FinderTags } from '../generated/typings';
 import { MOCK_CONFIG } from '../lib/__mocks__/bridge-config.ts';
@@ -153,4 +153,17 @@ export async function setupScannedLibrary() {
   await getMainNavigation().getByRole('link', { name: 'Settings' }).click();
   await page.getByRole('button', { name: 'Scan' }).click();
   await getMainNavigation().getByRole('link', { name: 'Library' }).click();
+}
+
+export async function selectGenres(
+  trigger: ReturnType<typeof page.getByRole>,
+  genres: string[],
+) {
+  await trigger.click();
+  const popup = page.getByRole('dialog', { name: 'Genres' });
+  await popup.getByRole('button', { name: 'Any', exact: true }).click();
+  for (const genre of genres) {
+    await popup.getByRole('checkbox', { name: genre, exact: true }).click();
+  }
+  await userEvent.keyboard('[Escape]');
 }

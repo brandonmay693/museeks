@@ -7,6 +7,7 @@ import {
   getTrackAt,
   getTrackByName,
   setupScannedLibrary,
+  selectGenres,
 } from './e2e-helpers';
 
 beforeEachSetup();
@@ -208,7 +209,10 @@ test.skipIf(import.meta.env.PLATFORM !== 'macos')(
   async () => {
     await setupScannedLibrary();
     const needsTagging = page.getByRole('checkbox', { name: 'Needs tagging' });
-    const genre = page.getByRole('combobox', { name: 'Genre', exact: true });
+    const genre = page.getByRole('button', {
+      name: 'Filter genres',
+      exact: true,
+    });
     const energy = page.getByRole('combobox', { name: 'Energy', exact: true });
     await needsTagging.click();
     await expect.element(getTrackByName(/Whiskey Blues/)).toBeInTheDocument();
@@ -220,7 +224,7 @@ test.skipIf(import.meta.env.PLATFORM !== 'macos')(
       .poll(() => window.location.hash)
       .toContain('needsTagging=true');
 
-    await genre.selectOptions('House');
+    await selectGenres(genre, ['House']);
     await energy.selectOptions('untagged');
     await expect
       .element(getTrackByName(/Whiskey Blues/))
@@ -231,12 +235,18 @@ test.skipIf(import.meta.env.PLATFORM !== 'macos')(
       .element(page.getByText('No tracks match these tag filters and search.'))
       .toBeVisible();
     await page.getByRole('button', { name: 'Clear search' }).click();
-    await genre.selectOptions('untagged');
+    await selectGenres(genre, ['Untagged']);
     await expect.element(getTrackByName(/Whiskey Blues/)).toBeInTheDocument();
     await expect
       .element(getTrackByName(/Majestic Blues/))
       .not.toBeInTheDocument();
 
+    await selectGenres(genre, ['House', 'Untagged']);
+    await expect.element(getTrackByName(/Whiskey Blues/)).toBeInTheDocument();
+    await expect.element(getTrackByName(/Majestic Blues/)).toBeInTheDocument();
+    await expect
+      .element(getTrackByName(/Romantic Blues/))
+      .not.toBeInTheDocument();
     await page.getByRole('button', { name: 'Clear filters' }).click();
     await expect.element(needsTagging).not.toBeChecked();
     await energy.selectOptions('7');

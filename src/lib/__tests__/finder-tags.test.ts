@@ -27,22 +27,22 @@ describe('Finder tag filtering', () => {
   test('individual filters intersect and ignore unrelated tags', () => {
     expect(
       tracks.filter((tags) =>
-        matchesFinderTags(tags, { genre: 'untagged', energy: 'untagged' }),
+        matchesFinderTags(tags, { genre: ['untagged'], energy: 'untagged' }),
       ),
     ).toEqual([tracks[0]]);
     expect(
       tracks.filter((tags) =>
-        matchesFinderTags(tags, { genre: 'House', energy: 'untagged' }),
+        matchesFinderTags(tags, { genre: ['House'], energy: 'untagged' }),
       ),
     ).toEqual([tracks[1]]);
     expect(
       tracks.filter((tags) =>
-        matchesFinderTags(tags, { genre: 'House', energy: 7 }),
+        matchesFinderTags(tags, { genre: ['House'], energy: 7 }),
       ),
     ).toEqual([tracks[3]]);
     expect(
       tracks.filter((tags) =>
-        matchesFinderTags(tags, { needsTagging: true, genre: 'House' }),
+        matchesFinderTags(tags, { needsTagging: true, genre: ['House'] }),
       ),
     ).toEqual([tracks[1]]);
     expect(tracks.filter((tags) => matchesFinderTags(tags, {}))).toEqual(
@@ -56,7 +56,7 @@ describe('Finder tag filtering', () => {
         genre: 'House',
         energy: '7',
       }),
-    ).toEqual({ needsTagging: true, genre: 'House', energy: 7 });
+    ).toEqual({ needsTagging: true, genre: ['House'], energy: 7 });
     for (const energy of [0, 11, 1.5, 'bad', null, undefined]) {
       expect(
         validateFinderTagFilters({ needsTagging: 'false', genre: [], energy }),
@@ -66,6 +66,26 @@ describe('Finder tag filtering', () => {
         energy: undefined,
       });
     }
+  });
+  test('selected genres match any choice while intersecting with energy', () => {
+    expect(
+      tracks.filter((tags) =>
+        matchesFinderTags(tags, { genre: ['House', 'Techno'] }),
+      ),
+    ).toEqual([tracks[1], tracks[3], tracks[4]]);
+    expect(
+      tracks.filter((tags) =>
+        matchesFinderTags(tags, { genre: ['House', 'untagged'], energy: 7 }),
+      ),
+    ).toEqual([tracks[2], tracks[3]]);
+    expect(
+      tracks.filter((tags) => matchesFinderTags(tags, { genre: [] })),
+    ).toEqual(tracks);
+    expect(
+      validateFinderTagFilters({
+        genre: ['House', null, '', 'House', 'Techno', 4],
+      }).genre,
+    ).toEqual(['House', 'Techno']);
   });
   test('saving updates every cached batch containing the track, preserving its other tag', async () => {
     const client = new QueryClient();

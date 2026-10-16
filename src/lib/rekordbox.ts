@@ -121,7 +121,7 @@ export function harmonicMatches(
 export type HarmonicSearch = {
   match?: string;
   matchSearch?: string;
-  matchGenre?: string;
+  matchGenre?: string[];
   matchEnergy?: number | 'untagged';
   matchNeedsTagging?: boolean;
   adventurous?: boolean;

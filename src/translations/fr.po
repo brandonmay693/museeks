@@ -286,59 +286,75 @@ msgstr "En-tête"
 msgid "Queue"
 msgstr "File d'attente"
 
-#: src/components/LibraryTagFilters.tsx:44
+#: src/components/LibraryTagFilters.tsx:45
 msgid "Filter by Finder tags"
 msgstr ""
 
-#: src/components/LibraryTagFilters.tsx:49
+#: src/components/LibraryTagFilters.tsx:50
 msgid "Show tracks missing genre or energy"
 msgstr ""
 
-#: src/components/LibraryTagFilters.tsx:58
+#: src/components/LibraryTagFilters.tsx:59
 msgid "Needs tagging"
 msgstr ""
 
-#: src/components/LibraryTagFilters.tsx:61
+#: src/components/LibraryTagFilters.tsx:62
 #: src/components/TrackListHeader.tsx:93
 #: src/routes/tracks.$trackID.tsx:139
 msgid "Genre"
 msgstr "Genre"
 
-#: src/components/LibraryTagFilters.tsx:69
-#: src/components/LibraryTagFilters.tsx:95
-msgid "Any"
+#: src/components/LibraryTagFilters.tsx:65
+msgid "Filter genres"
 msgstr ""
 
-#: src/components/LibraryTagFilters.tsx:70
-#: src/components/LibraryTagFilters.tsx:96
+#: src/components/LibraryTagFilters.tsx:67
+#: src/components/LibraryTagFilters.tsx:75
+#: src/components/LibraryTagFilters.tsx:111
+#: src/components/LibraryTagFilters.tsx:137
 msgid "Untagged"
 msgstr ""
 
-#: src/components/LibraryTagFilters.tsx:79
+#: src/components/LibraryTagFilters.tsx:72
+#: src/components/LibraryTagFilters.tsx:93
+#: src/components/LibraryTagFilters.tsx:136
+msgid "Any"
+msgstr ""
+
+#. placeholder {0}: filters.genre.length
+#: src/components/LibraryTagFilters.tsx:77
+msgid "{0} genres"
+msgstr ""
+
+#: src/components/LibraryTagFilters.tsx:88
+msgid "Genres"
+msgstr ""
+
+#: src/components/LibraryTagFilters.tsx:120
 msgid "Energy"
 msgstr ""
 
-#: src/components/LibraryTagFilters.tsx:109
+#: src/components/LibraryTagFilters.tsx:150
 msgid "Clear filters"
 msgstr ""
 
-#: src/components/LibraryTagFilters.tsx:111
+#: src/components/LibraryTagFilters.tsx:152
 msgid "Reading tags…"
 msgstr ""
 
-#: src/components/LibraryTagFilters.tsx:111
+#: src/components/LibraryTagFilters.tsx:152
 msgid "Refresh tags"
 msgstr ""
 
-#: src/components/LibraryTagFilters.tsx:118
+#: src/components/LibraryTagFilters.tsx:159
 msgid "Some Finder tags could not be read. Those tracks are excluded from tag filters. Check that your music files are available, then refresh tags."
 msgstr ""
 
-#: src/components/LibraryTagFilters.tsx:122
+#: src/components/LibraryTagFilters.tsx:163
 msgid "Could not load the genre list."
 msgstr ""
 
-#: src/components/LibraryTagFilters.tsx:125
+#: src/components/LibraryTagFilters.tsx:166
 msgid "Retry"
 msgstr ""
 

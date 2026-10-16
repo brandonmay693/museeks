@@ -10,6 +10,7 @@ import {
   getTrackByName,
   getMainNavigation,
   setupScannedLibrary,
+  selectGenres,
 } from './e2e-helpers';
 
 beforeEachSetup();
@@ -127,9 +128,10 @@ test.runIf(import.meta.env.PLATFORM === 'macos')(
     await pane
       .getByRole('searchbox', { name: 'Search compatible tracks' })
       .fill('');
-    await pane
-      .getByRole('combobox', { name: 'Genre', exact: true })
-      .selectOptions('House');
+    await selectGenres(
+      pane.getByRole('button', { name: 'Filter genres', exact: true }),
+      ['House', 'Techno'],
+    );
     await pane
       .getByRole('combobox', { name: 'Energy', exact: true })
       .selectOptions('7');
@@ -145,9 +147,10 @@ test.runIf(import.meta.env.PLATFORM === 'macos')(
       .click();
     await expect.element(pane.getByRole('note')).toHaveTextContent('10A · 3A');
     const library = page.getByRole('region', { name: 'Library tracks' });
-    await library
-      .getByRole('combobox', { name: 'Genre', exact: true })
-      .selectOptions('untagged');
+    await selectGenres(
+      library.getByRole('button', { name: 'Filter genres', exact: true }),
+      ['Untagged'],
+    );
     await pane
       .getByRole('searchbox', { name: 'Search compatible tracks' })
       .fill('Romantic');
@@ -160,8 +163,10 @@ test.runIf(import.meta.env.PLATFORM === 'macos')(
     await getMainNavigation().getByRole('link', { name: 'Library' }).click();
     await expect.element(search).toHaveValue('Whiskey');
     await expect
-      .element(library.getByRole('combobox', { name: 'Genre', exact: true }))
-      .toHaveValue('untagged');
+      .element(
+        library.getByRole('button', { name: 'Filter genres', exact: true }),
+      )
+      .toHaveTextContent('Untagged');
     await expect.element(pane).toHaveTextContent('Whiskey Blues');
     await expect
       .element(
@@ -169,8 +174,8 @@ test.runIf(import.meta.env.PLATFORM === 'macos')(
       )
       .toHaveValue('Romantic');
     await expect
-      .element(pane.getByRole('combobox', { name: 'Genre', exact: true }))
-      .toHaveValue('House');
+      .element(pane.getByRole('button', { name: 'Filter genres', exact: true }))
+      .toHaveTextContent('2 genres');
     await expect
       .element(pane.getByRole('combobox', { name: 'Energy', exact: true }))
       .toHaveValue('7');
@@ -191,8 +196,10 @@ test.runIf(import.meta.env.PLATFORM === 'macos')(
     await getMainNavigation().getByRole('link', { name: 'Library' }).click();
     await expect.element(pane).not.toBeInTheDocument();
     await expect
-      .element(library.getByRole('combobox', { name: 'Genre', exact: true }))
-      .toHaveValue('');
+      .element(
+        library.getByRole('button', { name: 'Filter genres', exact: true }),
+      )
+      .toHaveTextContent('Any');
     await page.getByRole('button', { name: 'Pause' }).click();
   },
 );

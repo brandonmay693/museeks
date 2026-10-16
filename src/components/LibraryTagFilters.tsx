@@ -1,3 +1,4 @@
+import { Popover } from '@base-ui/react/popover';
 import { useLingui } from '@lingui/react/macro';
 import * as stylex from '@stylexjs/stylex';
 import { useQuery } from '@tanstack/react-query';
@@ -34,7 +35,7 @@ export default function LibraryTagFilters({
     ...new Set([
       ...(availableGenres.data ?? []),
       ...genres,
-      ...(filters.genre && filters.genre !== 'untagged' ? [filters.genre] : []),
+      ...(filters.genre ?? []).filter((genre) => genre !== 'untagged'),
     ]),
   ].sort();
   return (
@@ -57,24 +58,64 @@ export default function LibraryTagFilters({
           />
           {t`Needs tagging`}
         </label>
-        <label {...stylex.props(styles.label)}>
-          {t`Genre`}
-          <select
-            {...stylex.props(styles.select)}
-            value={filters.genre ?? ''}
-            onChange={(event) =>
-              onChange({ ...filters, genre: event.target.value || undefined })
-            }
-          >
-            <option value="">{t`Any`}</option>
-            <option value="untagged">{t`Untagged`}</option>
-            {options.map((genre) => (
-              <option key={genre} value={genre}>
-                {genre}
-              </option>
-            ))}
-          </select>
-        </label>
+        <div {...stylex.props(styles.label)}>
+          <span>{t`Genre`}</span>
+          <Popover.Root>
+            <Popover.Trigger
+              aria-label={t`Filter genres`}
+              title={(filters.genre ?? [])
+                .map((genre) => (genre === 'untagged' ? t`Untagged` : genre))
+                .join(', ')}
+              {...stylex.props(styles.select, styles.genreTrigger)}
+            >
+              {!filters.genre?.length
+                ? t`Any`
+                : filters.genre.length === 1
+                  ? filters.genre[0] === 'untagged'
+                    ? t`Untagged`
+                    : filters.genre[0]
+                  : t`${filters.genre.length} genres`}{' '}
+              ▾
+            </Popover.Trigger>
+            <Popover.Portal>
+              <Popover.Positioner
+                side="bottom"
+                align="end"
+                sideOffset={6}
+                {...stylex.props(styles.positioner)}
+              >
+                <Popover.Popup
+                  aria-label={t`Genres`}
+                  {...stylex.props(styles.popup)}
+                >
+                  <Button
+                    onClick={() => onChange({ ...filters, genre: undefined })}
+                  >{t`Any`}</Button>
+                  {['untagged', ...options].map((genre) => (
+                    <label key={genre} {...stylex.props(styles.genreOption)}>
+                      <input
+                        type="checkbox"
+                        checked={filters.genre?.includes(genre) ?? false}
+                        onChange={(event) => {
+                          const next = event.target.checked
+                            ? [...(filters.genre ?? []), genre]
+                            : (filters.genre ?? []).filter(
+                                (selected) => selected !== genre,
+                              );
+                          onChange({
+                            ...filters,
+                            genre: next.length ? next : undefined,
+                          });
+                        }}
+                      />
+                      {genre === 'untagged' ? t`Untagged` : genre}
+                    </label>
+                  ))}
+                </Popover.Popup>
+              </Popover.Positioner>
+            </Popover.Portal>
+          </Popover.Root>
+        </div>
         <label {...stylex.props(styles.label)}>
           {t`Energy`}
           <select
@@ -161,6 +202,35 @@ const styles = stylex.create({
     borderStyle: 'solid',
     borderColor: 'var(--border-color-softer)',
     borderRadius: 'var(--border-radius)',
+  },
+  genreTrigger: {
+    minWidth: '100px',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    cursor: 'pointer',
+  },
+  positioner: { zIndex: 1000 },
+  popup: {
+    minWidth: '200px',
+    maxWidth: '300px',
+    maxHeight: 'min(360px, var(--available-height))',
+    overflowY: 'auto',
+    padding: '10px',
+    backgroundColor: 'var(--background)',
+    color: 'var(--text)',
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: 'var(--main-color)',
+    borderRadius: 'var(--border-radius)',
+    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)',
+  },
+  genreOption: {
+    display: 'flex',
+    alignItems: 'center',
+    columnGap: '8px',
+    paddingBlock: '6px',
+    cursor: 'pointer',
   },
   message: { marginTop: '8px', marginBottom: 0, fontSize: '0.9rem' },
 });

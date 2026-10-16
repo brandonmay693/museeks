@@ -4,22 +4,26 @@ import type { FinderTags } from '../generated/typings';
 
 export type FinderTagFilters = {
   needsTagging?: boolean;
-  genre?: string;
+  genre?: string[];
   energy?: 'untagged' | number;
 };
 
 export function validateFinderTagFilters(
   search: Record<string, unknown>,
 ): FinderTagFilters {
+  const selected = [
+    ...new Set(
+      (Array.isArray(search.genre) ? search.genre : [search.genre]).filter(
+        (genre): genre is string => typeof genre === 'string' && genre !== '',
+      ),
+    ),
+  ];
   return {
     needsTagging:
       search.needsTagging === true || search.needsTagging === 'true'
         ? true
         : undefined,
-    genre:
-      typeof search.genre === 'string' && search.genre !== ''
-        ? search.genre
-        : undefined,
+    genre: selected.length ? selected : undefined,
     energy:
       search.energy === 'untagged'
         ? 'untagged'
@@ -37,7 +41,7 @@ export function matchesFinderTags(
 ): boolean {
   if (
     !filters.needsTagging &&
-    filters.genre === undefined &&
+    !filters.genre?.length &&
     filters.energy === undefined
   )
     return true;
@@ -46,8 +50,8 @@ export function matchesFinderTags(
   if (filters.needsTagging && tags.genre !== null && tags.energy !== null)
     return false;
   if (
-    filters.genre !== undefined &&
-    tags.genre !== (filters.genre === 'untagged' ? null : filters.genre)
+    filters.genre?.length &&
+    !filters.genre.includes(tags.genre ?? 'untagged')
   )
     return false;
   if (
