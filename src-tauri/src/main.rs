@@ -74,6 +74,7 @@ fn main() {
         .plugin(plugins::cover::init())
         .plugin(plugins::energy::init())
         .plugin(plugins::rekordbox::init())
+        .plugin(plugins::waveform::init())
         .plugin(plugins::db::init())
         .plugin(plugins::debug::init())
         .plugin(plugins::default_view::init())

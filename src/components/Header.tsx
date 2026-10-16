@@ -12,6 +12,7 @@ import PlayerControls from './PlayerControls';
 import PlayingBar from './PlayingBar';
 import Queue from './Queue';
 import Search from './Search';
+import TrackWaveform from './TrackWaveform';
 
 export default function Header() {
   const queue = usePlayerState((state) => state.queue);
@@ -31,61 +32,68 @@ export default function Header() {
       )}
       data-tauri-drag-region
     >
-      <div
-        {...stylex.props(
-          styles.headerMainControls,
-          platform === 'macos' && styles.headerMainControlsMacos,
-        )}
-        data-tauri-drag-region
-      >
-        <PlayerControls />
+      <div {...stylex.props(styles.controlRow)}>
+        <div
+          {...stylex.props(
+            styles.headerMainControls,
+            platform === 'macos' && styles.headerMainControlsMacos,
+          )}
+          data-tauri-drag-region
+        >
+          <PlayerControls />
+        </div>
+        <div {...stylex.props(styles.headerPlayingBar)} data-tauri-drag-region>
+          {trackPlaying != null && (
+            <>
+              <PlayingBar trackPlaying={trackPlaying} />
+              {platform === 'macos' && (
+                <>
+                  <GenreTag
+                    key={`genre:${trackPlaying.path}`}
+                    path={trackPlaying.path}
+                  />
+                  <EnergyTag key={trackPlaying.path} path={trackPlaying.path} />
+                </>
+              )}
+              <Popover.Root>
+                <div ref={queueAnchorRef} {...stylex.props(styles.queue)}>
+                  <Popover.Trigger
+                    render={(triggerProps) => (
+                      <ButtonIcon
+                        {...triggerProps}
+                        icon="list"
+                        iconSize={20}
+                        label={t`Queue`}
+                        data-tauri-drag-region
+                      />
+                    )}
+                  />
+                </div>
+                <Popover.Portal>
+                  <Popover.Positioner
+                    side="bottom"
+                    alignOffset={-16}
+                    align="end"
+                    anchor={queueAnchorRef}
+                  >
+                    <Popover.Popup {...stylex.props(styles.queueContainer)}>
+                      <Queue queue={queue} queueCursor={queueCursor} />
+                    </Popover.Popup>
+                  </Popover.Positioner>
+                </Popover.Portal>
+              </Popover.Root>
+            </>
+          )}
+        </div>
+        <div {...stylex.props(styles.headerSearch)} data-tauri-drag-region>
+          <Search />
+        </div>
       </div>
-      <div {...stylex.props(styles.headerPlayingBar)} data-tauri-drag-region>
-        {trackPlaying != null && (
-          <>
-            <PlayingBar trackPlaying={trackPlaying} />
-            {platform === 'macos' && (
-              <>
-                <GenreTag
-                  key={`genre:${trackPlaying.path}`}
-                  path={trackPlaying.path}
-                />
-                <EnergyTag key={trackPlaying.path} path={trackPlaying.path} />
-              </>
-            )}
-            <Popover.Root>
-              <div ref={queueAnchorRef} {...stylex.props(styles.queue)}>
-                <Popover.Trigger
-                  render={(triggerProps) => (
-                    <ButtonIcon
-                      {...triggerProps}
-                      icon="list"
-                      iconSize={20}
-                      label={t`Queue`}
-                      data-tauri-drag-region
-                    />
-                  )}
-                />
-              </div>
-              <Popover.Portal>
-                <Popover.Positioner
-                  side="bottom"
-                  alignOffset={-16}
-                  align="end"
-                  anchor={queueAnchorRef}
-                >
-                  <Popover.Popup {...stylex.props(styles.queueContainer)}>
-                    <Queue queue={queue} queueCursor={queueCursor} />
-                  </Popover.Popup>
-                </Popover.Positioner>
-              </Popover.Portal>
-            </Popover.Root>
-          </>
-        )}
-      </div>
-      <div {...stylex.props(styles.headerSearch)} data-tauri-drag-region>
-        <Search />
-      </div>
+      {trackPlaying && (
+        <div {...stylex.props(styles.waveform)}>
+          <TrackWaveform track={trackPlaying} />
+        </div>
+      )}
     </header>
   );
 }
@@ -105,13 +113,20 @@ const styles = stylex.create({
     paddingLeft: '10px',
     paddingRight: '10px',
     display: 'flex',
-    alignItems: 'stretch',
-    justifyContent: 'space-between',
-    height: '50px',
+    flexDirection: 'column',
     flexGrow: 0,
     flexShrink: 0,
     flexBasis: 'auto',
   },
+  controlRow: {
+    display: 'flex',
+    alignItems: 'stretch',
+    justifyContent: 'space-between',
+    height: '50px',
+    flexShrink: 0,
+    minWidth: 0,
+  },
+  waveform: { paddingBlock: '4px', width: '100%', minWidth: 0 },
   headerBorderTop: {
     borderTopWidth: '1px',
     borderTopStyle: 'solid',

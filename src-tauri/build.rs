@@ -31,6 +31,10 @@ fn main() {
                 ]),
             )
             .plugin(
+                "waveform",
+                tauri_build::InlinedPlugin::new().commands(&["get_waveform"]),
+            )
+            .plugin(
                 "rekordbox",
                 tauri_build::InlinedPlugin::new().commands(&["get_snapshot", "set_source"]),
             )

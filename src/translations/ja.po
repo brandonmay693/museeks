@@ -204,85 +204,85 @@ msgstr "<0>アプリを再読み込み</0>してみてください、"
 msgid "or if it happens again, please <0>report an issue</0>."
 msgstr "また同じことが起こった場合は、<0>問題を報告してください</0>。"
 
-#: src/components/HarmonicMatches.tsx:77
+#: src/components/HarmonicMatches.tsx:78
 msgid "The reference track is no longer in your library."
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:79
+#: src/components/HarmonicMatches.tsx:80
 msgid "This track has no recognized key in the connected Rekordbox export."
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:80
+#: src/components/HarmonicMatches.tsx:81
 msgid "No compatible tracks match these filters. Try clearing the filters or refreshing the XML export."
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:83
+#: src/components/HarmonicMatches.tsx:84
 msgid "Harmonic matches"
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:86
+#: src/components/HarmonicMatches.tsx:87
 #: src/components/TrackList.tsx:472
 msgid "Compatible tracks"
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:89
+#: src/components/HarmonicMatches.tsx:90
 msgid "Track unavailable"
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:95
+#: src/components/HarmonicMatches.tsx:96
 msgid "Play reference track"
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:121
+#: src/components/HarmonicMatches.tsx:122
 msgid "Close matches"
 msgstr ""
 
 #. placeholder {0}: tracks.length
-#: src/components/HarmonicMatches.tsx:124
+#: src/components/HarmonicMatches.tsx:130
 msgid "Entire Museeks library · {0} matches"
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:126
+#: src/components/HarmonicMatches.tsx:132
 msgid "Standard keys:"
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:136
+#: src/components/HarmonicMatches.tsx:142
 msgid "Adventurous transitions"
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:140
+#: src/components/HarmonicMatches.tsx:146
 msgid "Experimental +2 / +7 Camelot jumps:"
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:142
+#: src/components/HarmonicMatches.tsx:148
 msgid "Audition these transitions; they are not standard harmonic matches."
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:148
+#: src/components/HarmonicMatches.tsx:154
 msgid "Search compatible tracks"
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:149
+#: src/components/HarmonicMatches.tsx:155
 msgid "Search compatible tracks…"
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:157
+#: src/components/HarmonicMatches.tsx:163
 msgid "Compatible track order"
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:166
+#: src/components/HarmonicMatches.tsx:172
 msgid "Energy: low to high"
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:167
+#: src/components/HarmonicMatches.tsx:173
 msgid "Energy: high to low"
 msgstr ""
 
-#: src/components/Header.tsx:26
+#: src/components/Header.tsx:27
 msgid "Header"
 msgstr ""
 
-#: src/components/Header.tsx:64
+#: src/components/Header.tsx:66
 msgid "Queue"
 msgstr "キュー"
 
@@ -622,6 +622,36 @@ msgstr ""
 
 #: src/components/TrackRow.tsx:157
 msgid "Not found in the connected Rekordbox export"
+msgstr ""
+
+#: src/components/TrackWaveform.tsx:67
+msgid "Seek reference track"
+msgstr ""
+
+#: src/components/TrackWaveform.tsx:67
+msgid "Seek playing track"
+msgstr ""
+
+#: src/components/TrackWaveform.tsx:69
+msgid "Loading waveform…"
+msgstr ""
+
+#: src/components/TrackWaveform.tsx:71
+msgid "Waveform unavailable · seeking still works"
+msgstr ""
+
+#: src/components/TrackWaveform.tsx:78
+#: src/components/TrackWaveform.tsx:79
+msgid "Back 10 seconds"
+msgstr ""
+
+#: src/components/TrackWaveform.tsx:88
+msgid "Click or drag to seek"
+msgstr ""
+
+#: src/components/TrackWaveform.tsx:138
+#: src/components/TrackWaveform.tsx:139
+msgid "Forward 10 seconds"
 msgstr ""
 
 #: src/components/VolumeControl.tsx:47

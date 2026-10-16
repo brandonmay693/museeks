@@ -13,6 +13,7 @@ edition = "2024"
 tauri-build = { version = "2.6.2", features = ["codegen"] }
 
 [dependencies]
+symphonia = { version = "0.5.5", features = ["all"] }
 quick-xml = "0.38.4"
 url = "2.5.8"
 tauri = { version = "2.11.2", features = [

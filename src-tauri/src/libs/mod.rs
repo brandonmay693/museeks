@@ -18,3 +18,5 @@ pub mod track;
 mod database_tests;
 
 pub mod rekordbox;
+
+pub mod waveform;

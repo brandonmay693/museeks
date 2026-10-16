@@ -4,7 +4,6 @@ import Link from '../elements/Link';
 import type { Repeat, Track } from '../generated/typings';
 import useFormattedDuration from '../hooks/useFormattedDuration';
 import usePlayingTrackCurrentTime from '../hooks/usePlayingTrackCurrentTime';
-import TrackProgress from './TrackProgress';
 
 type Props = {
   trackPlaying: Track;
@@ -71,7 +70,6 @@ export default function PlayingBarInfo(props: Props) {
 
         <div {...stylex.props(styles.duration)}>{formattedDuration}</div>
       </div>
-      <TrackProgress trackPlaying={trackPlaying} />
     </div>
   );
 }
@@ -84,7 +82,7 @@ const styles = stylex.create({
     minWidth: 0,
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     paddingTop: 0,
     paddingBottom: 0,
     paddingLeft: '8px',

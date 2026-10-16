@@ -29,3 +29,5 @@ pub mod sleepblocker;
 pub mod stream_server;
 
 pub mod rekordbox;
+
+pub mod waveform;

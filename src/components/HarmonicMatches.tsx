@@ -25,6 +25,7 @@ import {
 import LibraryTagFilters from './LibraryTagFilters';
 import TrackList from './TrackList';
 import TrackListStates from './TrackListStates';
+import TrackWaveform from './TrackWaveform';
 
 const QUEUE_ORIGIN = { type: 'library' } as const;
 
@@ -119,6 +120,11 @@ export default function HarmonicMatches(props: Props) {
         <Button
           onClick={() => onChange({ match: undefined })}
         >{t`Close matches`}</Button>
+        {reference && (
+          <div {...stylex.props(styles.waveform)}>
+            <TrackWaveform track={reference} reference />
+          </div>
+        )}
       </div>
       <div {...stylex.props(styles.tools)}>
         <div>{t`Entire Museeks library · ${tracks.length} matches`}</div>
@@ -214,13 +220,14 @@ const styles = stylex.create({
     flexDirection: 'column',
     minWidth: 0,
     height: '100%',
-    overflow: 'hidden',
+    overflowY: 'auto',
     backgroundColor: 'var(--background)',
   },
   heading: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
+    flexWrap: 'wrap',
     rowGap: '12px',
     columnGap: '12px',
     padding: '12px',
@@ -229,7 +236,8 @@ const styles = stylex.create({
     borderTopStyle: 'solid',
     borderTopColor: 'var(--main-color)',
   },
-  title: { minWidth: 0 },
+  title: { minWidth: 0, flexShrink: 1, flexGrow: 1, flexBasis: '0%' },
+  waveform: { width: '100%', minWidth: 0 },
   referenceRow: {
     display: 'flex',
     alignItems: 'center',
@@ -284,5 +292,10 @@ const styles = stylex.create({
     borderRadius: 'var(--border-radius)',
     padding: '6px',
   },
-  results: { flexGrow: 1, minHeight: 0, overflow: 'hidden' },
+  results: {
+    flexGrow: 1,
+    flexShrink: 0,
+    minHeight: '120px',
+    overflow: 'hidden',
+  },
 });

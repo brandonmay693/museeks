@@ -64,6 +64,11 @@ export function beforeEachSetup() {
     vi.doMock('../lib/bridge-rekordbox', () => ({
       default: { get: async () => null, setSource: async () => null },
     }));
+    vi.doMock('../lib/bridge-waveform', () => ({
+      default: {
+        get: async () => ({ duration: 300, peaks: [0, 0.3, 0.8, 1, 0.4, 0.2] }),
+      },
+    }));
     vi.doMock('../lib/bridge-config');
     vi.doMock('../lib/cover');
     const tagsByPath = new Map<string, FinderTags>();

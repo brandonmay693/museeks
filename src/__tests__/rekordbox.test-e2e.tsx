@@ -83,6 +83,35 @@ test.runIf(import.meta.env.PLATFORM === 'macos')(
     await expect
       .element(page.getByRole('banner'))
       .toHaveTextContent('Romantic Blues');
+    const { default: player } = await import('../lib/player');
+    const referenceWave = pane.getByRole('slider', {
+      name: 'Seek reference track',
+    });
+    await expect.poll(() => player.getCurrentTime()).toBeGreaterThan(0);
+    await referenceWave.click();
+    await expect
+      .element(page.getByRole('banner'))
+      .toHaveTextContent('Whiskey Blues');
+    await expect.poll(() => player.getCurrentTime()).toBeGreaterThan(100);
+    await page.getByRole('button', { name: 'Pause', exact: true }).click();
+    const mainWave = page.getByRole('slider', { name: 'Seek playing track' });
+    expect(mainWave.element().getBoundingClientRect().width).toBeGreaterThan(
+      500,
+    );
+    await mainWave.click();
+    const beforeJump = player.getCurrentTime();
+    await page
+      .getByRole('banner')
+      .getByRole('button', { name: 'Forward 10 seconds' })
+      .click();
+    await expect
+      .poll(() => player.getCurrentTime())
+      .toBeCloseTo(beforeJump + 10, 0);
+    await page
+      .getByRole('banner')
+      .getByRole('button', { name: 'Back 10 seconds' })
+      .click();
+    await expect.poll(() => player.getCurrentTime()).toBeCloseTo(beforeJump, 0);
     await pane.getByRole('button', { name: 'Play reference track' }).click();
     await expect
       .element(page.getByRole('banner'))

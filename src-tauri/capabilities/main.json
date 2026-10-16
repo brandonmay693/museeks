@@ -41,6 +41,7 @@
     "energy:allow-set-genre",
     "energy:allow-get-finder-tags",
     "rekordbox:allow-get-snapshot",
+    "waveform:allow-get-waveform",
     "rekordbox:allow-set-source",
     "database:allow-scan-library",
     "database:allow-get-all-tracks",
