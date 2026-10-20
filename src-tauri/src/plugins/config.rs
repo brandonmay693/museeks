@@ -29,6 +29,7 @@ pub enum SortBy {
     Duration,
     Genre,
     Energy,
+    Bpm,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, TS)]

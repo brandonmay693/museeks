@@ -14,6 +14,7 @@ import {
   sortTracks,
   stripAccents,
 } from '../lib/utils-library';
+import useRekordbox from './useRekordbox';
 /**
  * Filter and Sort a list of tracks depending on the user preferences and search
  * IMPORTANT: can only be used ONCE per view, as it has side effects
@@ -24,6 +25,7 @@ export default function useFilteredTracks(
   sortOrder?: SortOrder,
   finderTags?: Record<string, FinderTags>,
 ): Array<Track> {
+  const { entries } = useRekordbox();
   const search = useLibraryStore((state) => stripAccents(state.search));
 
   return useMemo(() => {
@@ -34,13 +36,13 @@ export default function useFilteredTracks(
       // sorting being a costly operation, do it after filtering, ignore it if not needed
       searchedTracks = sortTracks(
         searchedTracks,
-        getSortOrder(sortBy, sortOrder, finderTags),
+        getSortOrder(sortBy, sortOrder, finderTags, entries),
         sortOrder,
       );
     }
 
     return searchedTracks;
-  }, [tracks, search, sortBy, sortOrder, finderTags]);
+  }, [tracks, search, sortBy, sortOrder, finderTags, entries]);
 }
 
 /**

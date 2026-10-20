@@ -71,7 +71,7 @@ export default function HarmonicMatches(props: Props) {
   const order = search.matchOrder ?? 'Asc';
   const tracks = sortTracks(
     searched,
-    getSortOrder('Energy', order, finderTags),
+    getSortOrder(search.matchSortBy ?? 'Energy', order, finderTags, rb.entries),
     order,
   );
   const empty = !reference
@@ -161,16 +161,21 @@ export default function HarmonicMatches(props: Props) {
           />
           <select
             aria-label={t`Compatible track order`}
-            value={order}
+            value={search.matchSortBy === 'Bpm' ? `Bpm${order}` : order}
             onChange={(event) =>
               onChange({
-                matchOrder: event.target.value === 'Dsc' ? 'Dsc' : 'Asc',
+                matchOrder: event.target.value.endsWith('Dsc') ? 'Dsc' : 'Asc',
+                matchSortBy: event.target.value.startsWith('Bpm')
+                  ? 'Bpm'
+                  : undefined,
               })
             }
             {...stylex.props(styles.input)}
           >
             <option value="Asc">{t`Energy: low to high`}</option>
             <option value="Dsc">{t`Energy: high to low`}</option>
+            <option value="BpmAsc">{t`BPM: low to high`}</option>
+            <option value="BpmDsc">{t`BPM: high to low`}</option>
           </select>
         </div>
       </div>

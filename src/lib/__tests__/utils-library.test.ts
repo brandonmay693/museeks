@@ -94,3 +94,47 @@ describe('energy sorting', () => {
     expect(tracks[0].id).toBe('missing');
   });
 });
+
+describe('Rekordbox BPM sorting', () => {
+  test('sorts BPM numerically, breaks ties by title and puts missing BPM last in both directions', () => {
+    const tracks = [
+      'missing',
+      'fast',
+      'slow-b',
+      'slow-a',
+      'zero',
+      'invalid',
+    ].map((id) => ({
+      id,
+      path: id,
+      title: id,
+      artists: [],
+      album: '',
+      genres: [],
+    })) as unknown as Track[];
+    const entries = Object.fromEntries(
+      [
+        ['fast', 120.5],
+        ['slow-b', 99.9],
+        ['slow-a', 99.9],
+        ['zero', 0],
+        ['invalid', NaN],
+      ].map(([path, bpm]) => [path, { key: null, bpm: Number(bpm) }]),
+    );
+    expect(
+      sortTracks(
+        tracks,
+        getSortOrder('Bpm', 'Asc', undefined, entries),
+        'Asc',
+      ).map((track) => track.id),
+    ).toEqual(['slow-a', 'slow-b', 'fast', 'invalid', 'missing', 'zero']);
+    expect(
+      sortTracks(
+        tracks,
+        getSortOrder('Bpm', 'Dsc', undefined, entries),
+        'Dsc',
+      ).map((track) => track.id),
+    ).toEqual(['fast', 'slow-a', 'slow-b', 'invalid', 'missing', 'zero']);
+    expect(tracks[0].id).toBe('missing');
+  });
+});

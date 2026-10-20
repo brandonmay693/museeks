@@ -126,4 +126,5 @@ export type HarmonicSearch = {
   matchNeedsTagging?: boolean;
   adventurous?: boolean;
   matchOrder?: 'Asc' | 'Dsc';
+  matchSortBy?: 'Energy' | 'Bpm';
 };

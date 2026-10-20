@@ -27,7 +27,7 @@ export type ScanProgress = { current: number, total: number, };
 
 export type ScanResult = { track_count: number, track_failures: number, playlist_count: number, playlist_failures: number, };
 
-export type SortBy = "Artist" | "Album" | "Title" | "Duration" | "Genre" | "Energy";
+export type SortBy = "Artist" | "Album" | "Title" | "Duration" | "Genre" | "Energy" | "Bpm";
 
 export type SortOrder = "Asc" | "Dsc";
 

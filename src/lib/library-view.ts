@@ -26,6 +26,7 @@ export function validateLibraryView(
       search.adventurous === true || search.adventurous === 'true'
         ? true
         : undefined,
+    matchSortBy: search.matchSortBy === 'Bpm' ? 'Bpm' : undefined,
     matchOrder:
       search.matchOrder === 'Dsc' || search.matchOrder === 'Asc'
         ? search.matchOrder

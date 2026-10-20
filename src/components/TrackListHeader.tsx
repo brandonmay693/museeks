@@ -62,7 +62,7 @@ export default function TrackListHeader({
   const sorts: Record<TrackColumn, SortBy | null> = {
     title: 'Title',
     rekordbox: null,
-    bpm: null,
+    bpm: 'Bpm',
     duration: 'Duration',
     artist: 'Artist',
     album: 'Album',

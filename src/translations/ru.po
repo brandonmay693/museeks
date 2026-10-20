@@ -270,12 +270,20 @@ msgstr ""
 msgid "Compatible track order"
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:172
+#: src/components/HarmonicMatches.tsx:175
 msgid "Energy: low to high"
 msgstr ""
 
-#: src/components/HarmonicMatches.tsx:173
+#: src/components/HarmonicMatches.tsx:176
 msgid "Energy: high to low"
+msgstr ""
+
+#: src/components/HarmonicMatches.tsx:177
+msgid "BPM: low to high"
+msgstr ""
+
+#: src/components/HarmonicMatches.tsx:178
+msgid "BPM: high to low"
 msgstr ""
 
 #: src/components/Header.tsx:27

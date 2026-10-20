@@ -8,6 +8,7 @@ import { messages } from '../translations/en.po';
 import {
   beforeEachSetup,
   getTrackByName,
+  getTrackAt,
   getMainNavigation,
   setupScannedLibrary,
   selectGenres,
@@ -42,6 +43,13 @@ test.runIf(import.meta.env.PLATFORM === 'macos')(
     await expect
       .element(getTrackByName(/Whiskey Blues/))
       .toHaveTextContent('8A');
+    const bpmSort = page.getByRole('button', { name: 'RB BPM', exact: true });
+    await bpmSort.click();
+    await expect.element(getTrackAt(0)).toHaveTextContent('Whiskey Blues');
+    await expect.element(getTrackAt(2)).toHaveTextContent('Romantic Blues');
+    await bpmSort.click();
+    await expect.element(getTrackAt(0)).toHaveTextContent('Majestic Blues');
+    await expect.element(getTrackAt(2)).toHaveTextContent('Romantic Blues');
     const search = page.getByRole('textbox', { name: 'Search library' });
     await search.fill('Whiskey');
     const createItem = MenuItem.new.bind(MenuItem);
@@ -108,6 +116,19 @@ test.runIf(import.meta.env.PLATFORM === 'macos')(
     await expect.element(resizeBpm).toHaveAttribute('aria-valuenow', '95');
 
     const matches = pane.getByRole('listbox', { name: 'Compatible tracks' });
+    const matchOrdering = pane.getByRole('combobox', {
+      name: 'Compatible track order',
+    });
+    await matchOrdering.selectOptions('BpmAsc');
+    await expect
+      .element(matches.getByRole('option').first())
+      .toHaveTextContent('Majestic Blues');
+    await matchOrdering.selectOptions('BpmDsc');
+    await expect
+      .element(matches.getByRole('option').first())
+      .toHaveTextContent('Majestic Blues');
+    await matchOrdering.selectOptions('Asc');
+
     await expect
       .element(matches.getByRole('option', { name: /Romantic Blues/ }))
       .toBeVisible();
@@ -200,7 +221,7 @@ test.runIf(import.meta.env.PLATFORM === 'macos')(
       .fill('Romantic');
     await pane
       .getByRole('combobox', { name: 'Compatible track order' })
-      .selectOptions('Dsc');
+      .selectOptions('BpmDsc');
     await getMainNavigation().getByRole('link', { name: 'Artists' }).click();
     await expect.element(pane).not.toBeInTheDocument();
     await search.fill('something else');
@@ -225,7 +246,7 @@ test.runIf(import.meta.env.PLATFORM === 'macos')(
       .toHaveValue('7');
     await expect
       .element(pane.getByRole('combobox', { name: 'Compatible track order' }))
-      .toHaveValue('Dsc');
+      .toHaveValue('BpmDsc');
     await expect
       .element(pane.getByRole('checkbox', { name: 'Adventurous transitions' }))
       .toBeChecked();

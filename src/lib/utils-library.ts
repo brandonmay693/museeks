@@ -3,11 +3,13 @@ import uniq from 'lodash-es/uniq';
 
 import type {
   FinderTags,
+  RekordboxTrack,
   SortBy,
   SortOrder,
   Track,
 } from '../generated/typings';
 import type { Path } from '../types/museeks';
+import { trackRekordbox } from './rekordbox';
 
 /**
  * Filter an array of tracks by string
@@ -110,13 +112,26 @@ const SORT_ORDERS: Record<SortBy, SortConfig> = {
   Album: [ALBUM, ARTIST, 'disk_no', 'track_no'],
   Genre: [GENRE, ARTIST, ALBUM, 'disk_no', 'track_no'],
   Energy: [ARTIST, ALBUM, 'disk_no', 'track_no'],
+  Bpm: [TITLE, ARTIST, ALBUM, 'disk_no', 'track_no'],
 };
 
 export function getSortOrder(
   sortBy: SortBy,
   sortOrder: SortOrder = 'Asc',
   finderTags?: Record<string, FinderTags>,
+  rekordbox: Record<string, RekordboxTrack> = {},
 ): SortConfig {
+  if (sortBy === 'Bpm') {
+    const bpm = (track: Track): number => {
+      const value = trackRekordbox(track, rekordbox)?.bpm;
+      return value != null && Number.isFinite(value) && value > 0
+        ? value
+        : sortOrder === 'Asc'
+          ? Infinity
+          : -Infinity;
+    };
+    return [bpm, ...SORT_ORDERS.Bpm];
+  }
   if (sortBy === 'Energy') {
     const energy = (track: Track): number => {
       const tags = finderTags?.[track.path];
