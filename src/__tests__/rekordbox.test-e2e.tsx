@@ -15,6 +15,7 @@ import {
 } from './e2e-helpers';
 
 beforeEachSetup();
+const createMenuItem = MenuItem.new.bind(MenuItem);
 const snapshot: RekordboxSnapshot = {
   source: '/music/rekordbox.xml',
   modified_ms: 1700000000000,
@@ -52,7 +53,7 @@ test.runIf(import.meta.env.PLATFORM === 'macos')(
     await expect.element(getTrackAt(2)).toHaveTextContent('Romantic Blues');
     const search = page.getByRole('textbox', { name: 'Search library' });
     await search.fill('Whiskey');
-    const createItem = MenuItem.new.bind(MenuItem);
+    const createItem = createMenuItem;
     const menu = vi
       .spyOn(MenuItem, 'new')
       .mockImplementation((options) => createItem({ ...options }));
@@ -306,5 +307,84 @@ test.runIf(import.meta.env.PLATFORM === 'macos')(
       )
       .toHaveTextContent('Any');
     await page.getByRole('button', { name: 'Pause' }).click();
+  },
+);
+
+test.runIf(import.meta.env.PLATFORM === 'macos')(
+  'Compatible track controls stay pinned while a long list scrolls',
+  async () => {
+    await setupScannedLibrary();
+    const { default: client } = await import('../lib/query-client');
+    const { allTracksQuery } = await import('../lib/queries');
+    const { default: bridge } = await import('../lib/bridge-rekordbox');
+    const original = client.getQueryData<
+      import('../generated/typings').Track[]
+    >(allTracksQuery.queryKey)!;
+    const extra = Array.from({ length: 80 }, (_, index) => ({
+      ...original[0],
+      id: `match-${index}`,
+      path: `/match-${index}.mp3`,
+      title: `Match ${String(index).padStart(3, '0')}`,
+    }));
+    const manyMatches = {
+      ...snapshot,
+      tracks: {
+        ...snapshot.tracks,
+        ...Object.fromEntries(
+          extra.map((track) => [track.path, { key: 'Am', bpm: 120 }]),
+        ),
+      },
+    };
+    vi.spyOn(bridge, 'get').mockResolvedValue(manyMatches);
+    client.setQueryData(['rekordbox'], manyMatches);
+    client.setQueryData(allTracksQuery.queryKey, [...original, ...extra]);
+    const createItem = createMenuItem;
+    const menu = vi
+      .spyOn(MenuItem, 'new')
+      .mockImplementation((options) => createItem({ ...options }));
+    await getTrackByName(/Whiskey Blues/).click({ button: 'right' });
+    await expect
+      .poll(() =>
+        menu.mock.calls.some(
+          ([item]) => item.text === 'Find compatible tracks',
+        ),
+      )
+      .toBe(true);
+    menu.mock.calls
+      .find(([item]) => item.text === 'Find compatible tracks')![0]
+      .action?.('match');
+    const pane = page.getByRole('region', { name: 'Harmonic matches' });
+    const list = pane.getByRole('listbox', { name: 'Compatible tracks' });
+    await expect.element(list).toBeVisible();
+    const scrollable = list.element().parentElement!.parentElement!;
+    const controls = [
+      pane.getByRole('button', { name: 'Play reference track' }).element(),
+      pane.getByRole('slider', { name: 'Seek reference track' }).element(),
+      pane
+        .getByRole('searchbox', { name: 'Search compatible tracks' })
+        .element(),
+      pane.getByRole('button', { name: 'Filter genres' }).element(),
+      pane.getByRole('group', { name: 'Track list sorting options' }).element(),
+    ];
+    const positions = controls.map(
+      (control) => control.getBoundingClientRect().top,
+    );
+    expect(scrollable.clientHeight).toBeGreaterThan(0);
+    expect(scrollable.scrollHeight).toBeGreaterThan(scrollable.clientHeight);
+    expect(scrollable.getBoundingClientRect().bottom).toBeLessThanOrEqual(
+      pane.element().getBoundingClientRect().bottom + 1,
+    );
+    scrollable.scrollTop = 800;
+    await expect.poll(() => scrollable.scrollTop).toBe(800);
+    await expect
+      .poll(() => list.getByRole('option').first().element().textContent)
+      .not.toContain('Match 000');
+    controls.forEach((control, index) =>
+      expect(control.getBoundingClientRect().top).toBeCloseTo(
+        positions[index],
+        0,
+      ),
+    );
+    expect(pane.element().scrollHeight).toBe(pane.element().clientHeight);
   },
 );

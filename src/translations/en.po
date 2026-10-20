@@ -238,91 +238,91 @@ msgid "Close matches"
 msgstr "Close matches"
 
 #. placeholder {0}: tracks.length
-#: src/components/HarmonicMatches.tsx:131
+#: src/components/HarmonicMatches.tsx:132
 msgid "Entire Museeks library · {0} matches"
 msgstr "Entire Museeks library · {0} matches"
 
-#: src/components/HarmonicMatches.tsx:133
+#: src/components/HarmonicMatches.tsx:134
 msgid "Standard keys:"
 msgstr "Standard keys:"
 
-#: src/components/HarmonicMatches.tsx:143
+#: src/components/HarmonicMatches.tsx:145
 msgid "Adventurous transitions"
 msgstr "Adventurous transitions"
 
-#: src/components/HarmonicMatches.tsx:147
+#: src/components/HarmonicMatches.tsx:149
 msgid "Experimental +2 / +7 Camelot jumps:"
 msgstr "Experimental +2 / +7 Camelot jumps:"
 
-#: src/components/HarmonicMatches.tsx:149
+#: src/components/HarmonicMatches.tsx:151
 msgid "Audition these transitions; they are not standard harmonic matches."
 msgstr "Audition these transitions; they are not standard harmonic matches."
 
-#: src/components/HarmonicMatches.tsx:155
+#: src/components/HarmonicMatches.tsx:157
 msgid "Search compatible tracks"
 msgstr "Search compatible tracks"
 
-#: src/components/HarmonicMatches.tsx:156
+#: src/components/HarmonicMatches.tsx:158
 msgid "Search compatible tracks…"
 msgstr "Search compatible tracks…"
 
-#: src/components/HarmonicMatches.tsx:164
+#: src/components/HarmonicMatches.tsx:166
 msgid "Compatible track order"
 msgstr "Compatible track order"
 
-#: src/components/HarmonicMatches.tsx:180
+#: src/components/HarmonicMatches.tsx:182
 msgid "Energy: low to high"
 msgstr "Energy: low to high"
 
-#: src/components/HarmonicMatches.tsx:181
+#: src/components/HarmonicMatches.tsx:183
 msgid "Energy: high to low"
 msgstr "Energy: high to low"
 
-#: src/components/HarmonicMatches.tsx:182
+#: src/components/HarmonicMatches.tsx:184
 msgid "BPM: low to high"
 msgstr "BPM: low to high"
 
-#: src/components/HarmonicMatches.tsx:183
+#: src/components/HarmonicMatches.tsx:185
 msgid "BPM: high to low"
 msgstr "BPM: high to low"
 
-#: src/components/HarmonicMatches.tsx:184
+#: src/components/HarmonicMatches.tsx:186
 msgid "Title: A to Z"
 msgstr "Title: A to Z"
 
-#: src/components/HarmonicMatches.tsx:185
+#: src/components/HarmonicMatches.tsx:187
 msgid "Title: Z to A"
 msgstr "Title: Z to A"
 
-#: src/components/HarmonicMatches.tsx:186
+#: src/components/HarmonicMatches.tsx:188
 msgid "Artist: A to Z"
 msgstr "Artist: A to Z"
 
-#: src/components/HarmonicMatches.tsx:187
+#: src/components/HarmonicMatches.tsx:189
 msgid "Artist: Z to A"
 msgstr "Artist: Z to A"
 
-#: src/components/HarmonicMatches.tsx:188
+#: src/components/HarmonicMatches.tsx:190
 msgid "Album: A to Z"
 msgstr "Album: A to Z"
 
-#: src/components/HarmonicMatches.tsx:189
+#: src/components/HarmonicMatches.tsx:191
 msgid "Album: Z to A"
 msgstr "Album: Z to A"
 
-#: src/components/HarmonicMatches.tsx:190
+#: src/components/HarmonicMatches.tsx:192
 msgid "Genre: A to Z"
 msgstr "Genre: A to Z"
 
-#: src/components/HarmonicMatches.tsx:191
+#: src/components/HarmonicMatches.tsx:193
 msgid "Genre: Z to A"
 msgstr "Genre: Z to A"
 
-#: src/components/HarmonicMatches.tsx:192
+#: src/components/HarmonicMatches.tsx:194
 msgid "Duration: short to long"
 msgstr "Duration: short to long"
 
-#: src/components/HarmonicMatches.tsx:193
+#: src/components/HarmonicMatches.tsx:195
 msgid "Duration: long to short"
 msgstr "Duration: long to short"
 

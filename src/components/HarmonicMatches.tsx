@@ -128,9 +128,11 @@ export default function HarmonicMatches(props: Props) {
         )}
       </div>
       <div {...stylex.props(styles.tools)}>
-        <div>{t`Entire Museeks library · ${tracks.length} matches`}</div>
-        <div>
-          {t`Standard keys:`} <strong>{standard.join(' · ') || '—'}</strong>
+        <div {...stylex.props(styles.summary)}>
+          <div>{t`Entire Museeks library · ${tracks.length} matches`}</div>
+          <div>
+            {t`Standard keys:`} <strong>{standard.join(' · ') || '—'}</strong>
+          </div>
         </div>
         <label {...stylex.props(styles.label)}>
           <input
@@ -249,17 +251,19 @@ const styles = stylex.create({
     flexDirection: 'column',
     minWidth: 0,
     height: '100%',
-    overflowY: 'auto',
+    minHeight: 0,
+    overflow: 'hidden',
     backgroundColor: 'var(--background)',
   },
   heading: {
+    flexShrink: 0,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
-    rowGap: '12px',
+    rowGap: { default: '12px', '@media (max-height: 700px)': '6px' },
     columnGap: '12px',
-    padding: '12px',
+    padding: { default: '12px', '@media (max-height: 700px)': '6px' },
     backgroundColor: 'var(--tracks-header-bg)',
     borderTopWidth: '2px',
     borderTopStyle: 'solid',
@@ -290,11 +294,18 @@ const styles = stylex.create({
     whiteSpace: 'nowrap',
     color: 'var(--text-muted)',
   },
+  summary: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    columnGap: '12px',
+    rowGap: '4px',
+  },
   tools: {
-    padding: '10px',
+    flexShrink: 0,
+    padding: { default: '10px', '@media (max-height: 700px)': '6px' },
     display: 'flex',
     flexDirection: 'column',
-    rowGap: '8px',
+    rowGap: { default: '8px', '@media (max-height: 700px)': '4px' },
     columnGap: '8px',
     fontSize: '0.9rem',
   },
@@ -323,8 +334,9 @@ const styles = stylex.create({
   },
   results: {
     flexGrow: 1,
-    flexShrink: 0,
-    minHeight: '120px',
+    flexShrink: 1,
+    flexBasis: 0,
+    minHeight: 0,
     overflow: 'hidden',
   },
 });
