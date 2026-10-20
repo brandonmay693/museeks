@@ -9,6 +9,7 @@ import { matchesFinderTags } from '../lib/finder-tags';
 import player from '../lib/player';
 import queryClient from '../lib/query-client';
 import {
+  validateMatchSortBy,
   camelotKey,
   compatibleKeys,
   harmonicMatches,
@@ -161,13 +162,17 @@ export default function HarmonicMatches(props: Props) {
           />
           <select
             aria-label={t`Compatible track order`}
-            value={search.matchSortBy === 'Bpm' ? `Bpm${order}` : order}
+            value={
+              search.matchSortBy && search.matchSortBy !== 'Energy'
+                ? `${search.matchSortBy}${order}`
+                : order
+            }
             onChange={(event) =>
               onChange({
                 matchOrder: event.target.value.endsWith('Dsc') ? 'Dsc' : 'Asc',
-                matchSortBy: event.target.value.startsWith('Bpm')
-                  ? 'Bpm'
-                  : undefined,
+                matchSortBy: validateMatchSortBy(
+                  event.target.value.slice(0, -3),
+                ),
               })
             }
             {...stylex.props(styles.input)}
@@ -176,6 +181,16 @@ export default function HarmonicMatches(props: Props) {
             <option value="Dsc">{t`Energy: high to low`}</option>
             <option value="BpmAsc">{t`BPM: low to high`}</option>
             <option value="BpmDsc">{t`BPM: high to low`}</option>
+            <option value="TitleAsc">{t`Title: A to Z`}</option>
+            <option value="TitleDsc">{t`Title: Z to A`}</option>
+            <option value="ArtistAsc">{t`Artist: A to Z`}</option>
+            <option value="ArtistDsc">{t`Artist: Z to A`}</option>
+            <option value="AlbumAsc">{t`Album: A to Z`}</option>
+            <option value="AlbumDsc">{t`Album: Z to A`}</option>
+            <option value="GenreAsc">{t`Genre: A to Z`}</option>
+            <option value="GenreDsc">{t`Genre: Z to A`}</option>
+            <option value="DurationAsc">{t`Duration: short to long`}</option>
+            <option value="DurationDsc">{t`Duration: long to short`}</option>
           </select>
         </div>
       </div>
@@ -207,6 +222,15 @@ export default function HarmonicMatches(props: Props) {
         >
           <TrackList
             secondary
+            sorting={{
+              by: search.matchSortBy ?? 'Energy',
+              order,
+              onChange: (by, direction) =>
+                onChange({
+                  matchSortBy: validateMatchSortBy(by),
+                  matchOrder: direction,
+                }),
+            }}
             layout="default"
             data={tracks}
             finderTags={finderTags}

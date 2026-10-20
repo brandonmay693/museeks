@@ -127,7 +127,47 @@ test.runIf(import.meta.env.PLATFORM === 'macos')(
     await expect
       .element(matches.getByRole('option').first())
       .toHaveTextContent('Majestic Blues');
-    await matchOrdering.selectOptions('Asc');
+    // A second known BPM must actually move when the pane header toggles.
+    const updatedSnapshot = {
+      ...snapshot,
+      tracks: {
+        ...snapshot.tracks,
+        '/romantic-blues.mp3': { key: 'Em', bpm: 124 },
+      },
+    };
+    vi.mocked(bridge.get).mockResolvedValue(updatedSnapshot);
+    client.setQueryData(['rekordbox'], updatedSnapshot);
+    await expect
+      .element(matches.getByRole('option').first())
+      .toHaveTextContent('Romantic Blues');
+    const mainConfig = client.getQueryData(['config']);
+    const paneBpm = pane.getByRole('button', { name: 'RB BPM', exact: true });
+    await paneBpm.click();
+    await expect.element(matchOrdering).toHaveValue('BpmAsc');
+    await expect
+      .element(matches.getByRole('option').first())
+      .toHaveTextContent('Majestic Blues');
+    await paneBpm.click();
+    await expect.element(matchOrdering).toHaveValue('BpmDsc');
+    await expect
+      .element(matches.getByRole('option').first())
+      .toHaveTextContent('Romantic Blues');
+    expect(client.getQueryData(['config'])).toEqual(mainConfig);
+    await pane.getByRole('button', { name: 'Title', exact: true }).click();
+    await expect.element(matchOrdering).toHaveValue('TitleAsc');
+    await expect
+      .element(matches.getByRole('option').first())
+      .toHaveTextContent('Majestic Blues');
+    await matchOrdering.selectOptions('TitleDsc');
+    await expect
+      .element(matches.getByRole('option').first())
+      .toHaveTextContent('Romantic Blues');
+    await pane
+      .getByRole('button', { name: 'Museek Genre and Energy', exact: true })
+      .click();
+    await expect.element(matchOrdering).toHaveValue('Asc');
+    vi.mocked(bridge.get).mockResolvedValue(snapshot);
+    client.setQueryData(['rekordbox'], snapshot);
 
     await expect
       .element(matches.getByRole('option', { name: /Romantic Blues/ }))

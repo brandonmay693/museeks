@@ -41,12 +41,14 @@ import { listKeyboardSelect, listMouseSelect } from '../lib/utils-list';
 import type { QueueOrigin, TrackListVirtualizer } from '../types/museeks';
 import TrackListDefault from './TrackListDefault';
 import TrackListGrouped from './TrackListGrouped';
+import type { TrackSortControl } from './TrackListHeaderCell';
 
 // --------------------------------------------------------------------------
 // TrackList
 // --------------------------------------------------------------------------
 
 type TrackListProps = {
+  sorting?: TrackSortControl;
   playlists: Playlist[];
   finderTags?: Record<string, FinderTags>;
   tracksDensity: Config['track_view_density'];
@@ -468,7 +470,8 @@ export default function TrackList(props: Props) {
         <TrackListDefault
           finderTags={props.finderTags}
           rekordbox={rekordbox.data ? rekordbox.entries : undefined}
-          sortable={!props.secondary}
+          sortable={!props.secondary || !!props.sorting}
+          sorting={props.sorting}
           listLabel={props.secondary ? t`Compatible tracks` : undefined}
           ref={scrollableRef}
           tracks={data}

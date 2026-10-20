@@ -1,4 +1,5 @@
 import type {
+  SortBy,
   RekordboxSnapshot,
   RekordboxTrack,
   Track,
@@ -126,5 +127,19 @@ export type HarmonicSearch = {
   matchNeedsTagging?: boolean;
   adventurous?: boolean;
   matchOrder?: 'Asc' | 'Dsc';
-  matchSortBy?: 'Energy' | 'Bpm';
+  matchSortBy?: SortBy;
 };
+
+export function validateMatchSortBy(value: unknown): SortBy | undefined {
+  switch (value) {
+    case 'Bpm':
+    case 'Title':
+    case 'Artist':
+    case 'Album':
+    case 'Duration':
+    case 'Genre':
+      return value;
+    default:
+      return undefined;
+  }
+}

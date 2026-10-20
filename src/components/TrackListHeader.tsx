@@ -19,9 +19,11 @@ import * as stylex from '@stylexjs/stylex';
 import type { SortBy } from '../generated/typings';
 import type { TrackColumn } from '../hooks/useTrackColumnWidths';
 import type useTrackColumnWidths from '../hooks/useTrackColumnWidths';
+import type { TrackSortControl } from './TrackListHeaderCell';
 import TrackListHeaderCell from './TrackListHeaderCell';
 
 type Props = {
+  sorting?: TrackSortControl;
   sortable?: boolean;
   showRekordbox?: boolean;
   columns: ReturnType<typeof useTrackColumnWidths>;
@@ -30,6 +32,7 @@ type Props = {
 
 export default function TrackListHeader({
   columns,
+  sorting,
   showRekordbox = false,
   sortable = true,
   showFinderTags = false,
@@ -105,6 +108,7 @@ export default function TrackListHeader({
               key={column}
               column={column}
               title={labels[column]}
+              sorting={sorting}
               sortBy={sortable ? sorts[column] : null}
               resize={{
                 width: columns.widths[column],

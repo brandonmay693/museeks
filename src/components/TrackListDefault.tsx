@@ -18,6 +18,7 @@ import usePlayingTrackID from '../hooks/usePlayingTrackID';
 import useTrackColumnWidths from '../hooks/useTrackColumnWidths';
 import type { TrackListVirtualizer } from '../types/museeks';
 import TrackListHeader from './TrackListHeader';
+import type { TrackSortControl } from './TrackListHeaderCell';
 import TrackRow, { type TrackRowEvents } from './TrackRow';
 
 const DND_MODIFIERS = [restrictToVerticalAxis];
@@ -29,6 +30,7 @@ const DND_MODIFIERS = [restrictToVerticalAxis];
  * -------------------------------------------------------------------------- */
 
 type Props = {
+  sorting?: TrackSortControl;
   ref: React.RefObject<TrackListVirtualizer | null>;
   tracks: Track[];
   finderTags?: Record<string, FinderTags>;
@@ -136,6 +138,7 @@ export default function TrackListDefault(props: Props) {
         <div style={{ minWidth: columns.totalWidth }}>
           <TrackListHeader
             columns={columns}
+            sorting={props.sorting}
             sortable={!reorderable && props.sortable !== false}
             showRekordbox={!!props.rekordbox}
             showFinderTags={showFinderTags}

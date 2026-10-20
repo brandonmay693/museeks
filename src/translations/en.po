@@ -204,87 +204,127 @@ msgstr "Try <0>reloading the app</0>,"
 msgid "or if it happens again, please <0>report an issue</0>."
 msgstr "or if it happens again, please <0>report an issue</0>."
 
-#: src/components/HarmonicMatches.tsx:78
+#: src/components/HarmonicMatches.tsx:79
 msgid "The reference track is no longer in your library."
 msgstr "The reference track is no longer in your library."
 
-#: src/components/HarmonicMatches.tsx:80
+#: src/components/HarmonicMatches.tsx:81
 msgid "This track has no recognized key in the connected Rekordbox export."
 msgstr "This track has no recognized key in the connected Rekordbox export."
 
-#: src/components/HarmonicMatches.tsx:81
+#: src/components/HarmonicMatches.tsx:82
 msgid "No compatible tracks match these filters. Try clearing the filters or refreshing the XML export."
 msgstr "No compatible tracks match these filters. Try clearing the filters or refreshing the XML export."
 
-#: src/components/HarmonicMatches.tsx:84
+#: src/components/HarmonicMatches.tsx:85
 msgid "Harmonic matches"
 msgstr "Harmonic matches"
 
-#: src/components/HarmonicMatches.tsx:87
-#: src/components/TrackList.tsx:472
+#: src/components/HarmonicMatches.tsx:88
+#: src/components/TrackList.tsx:475
 msgid "Compatible tracks"
 msgstr "Compatible tracks"
 
-#: src/components/HarmonicMatches.tsx:90
+#: src/components/HarmonicMatches.tsx:91
 msgid "Track unavailable"
 msgstr "Track unavailable"
 
-#: src/components/HarmonicMatches.tsx:96
+#: src/components/HarmonicMatches.tsx:97
 msgid "Play reference track"
 msgstr "Play reference track"
 
-#: src/components/HarmonicMatches.tsx:122
+#: src/components/HarmonicMatches.tsx:123
 msgid "Close matches"
 msgstr "Close matches"
 
 #. placeholder {0}: tracks.length
-#: src/components/HarmonicMatches.tsx:130
+#: src/components/HarmonicMatches.tsx:131
 msgid "Entire Museeks library · {0} matches"
 msgstr "Entire Museeks library · {0} matches"
 
-#: src/components/HarmonicMatches.tsx:132
+#: src/components/HarmonicMatches.tsx:133
 msgid "Standard keys:"
 msgstr "Standard keys:"
 
-#: src/components/HarmonicMatches.tsx:142
+#: src/components/HarmonicMatches.tsx:143
 msgid "Adventurous transitions"
 msgstr "Adventurous transitions"
 
-#: src/components/HarmonicMatches.tsx:146
+#: src/components/HarmonicMatches.tsx:147
 msgid "Experimental +2 / +7 Camelot jumps:"
 msgstr "Experimental +2 / +7 Camelot jumps:"
 
-#: src/components/HarmonicMatches.tsx:148
+#: src/components/HarmonicMatches.tsx:149
 msgid "Audition these transitions; they are not standard harmonic matches."
 msgstr "Audition these transitions; they are not standard harmonic matches."
 
-#: src/components/HarmonicMatches.tsx:154
+#: src/components/HarmonicMatches.tsx:155
 msgid "Search compatible tracks"
 msgstr "Search compatible tracks"
 
-#: src/components/HarmonicMatches.tsx:155
+#: src/components/HarmonicMatches.tsx:156
 msgid "Search compatible tracks…"
 msgstr "Search compatible tracks…"
 
-#: src/components/HarmonicMatches.tsx:163
+#: src/components/HarmonicMatches.tsx:164
 msgid "Compatible track order"
 msgstr "Compatible track order"
 
-#: src/components/HarmonicMatches.tsx:175
+#: src/components/HarmonicMatches.tsx:180
 msgid "Energy: low to high"
 msgstr "Energy: low to high"
 
-#: src/components/HarmonicMatches.tsx:176
+#: src/components/HarmonicMatches.tsx:181
 msgid "Energy: high to low"
 msgstr "Energy: high to low"
 
-#: src/components/HarmonicMatches.tsx:177
+#: src/components/HarmonicMatches.tsx:182
 msgid "BPM: low to high"
 msgstr "BPM: low to high"
 
-#: src/components/HarmonicMatches.tsx:178
+#: src/components/HarmonicMatches.tsx:183
 msgid "BPM: high to low"
 msgstr "BPM: high to low"
+
+#: src/components/HarmonicMatches.tsx:184
+msgid "Title: A to Z"
+msgstr "Title: A to Z"
+
+#: src/components/HarmonicMatches.tsx:185
+msgid "Title: Z to A"
+msgstr "Title: Z to A"
+
+#: src/components/HarmonicMatches.tsx:186
+msgid "Artist: A to Z"
+msgstr "Artist: A to Z"
+
+#: src/components/HarmonicMatches.tsx:187
+msgid "Artist: Z to A"
+msgstr "Artist: Z to A"
+
+#: src/components/HarmonicMatches.tsx:188
+msgid "Album: A to Z"
+msgstr "Album: A to Z"
+
+#: src/components/HarmonicMatches.tsx:189
+msgid "Album: Z to A"
+msgstr "Album: Z to A"
+
+#: src/components/HarmonicMatches.tsx:190
+msgid "Genre: A to Z"
+msgstr "Genre: A to Z"
+
+#: src/components/HarmonicMatches.tsx:191
+msgid "Genre: Z to A"
+msgstr "Genre: Z to A"
+
+#: src/components/HarmonicMatches.tsx:192
+msgid "Duration: short to long"
+msgstr "Duration: short to long"
+
+#: src/components/HarmonicMatches.tsx:193
+msgid "Duration: long to short"
+msgstr "Duration: long to short"
 
 #: src/components/Header.tsx:27
 msgid "Header"
@@ -307,7 +347,7 @@ msgid "Needs tagging"
 msgstr "Needs tagging"
 
 #: src/components/LibraryTagFilters.tsx:62
-#: src/components/TrackListHeader.tsx:59
+#: src/components/TrackListHeader.tsx:62
 #: src/routes/tracks.$trackID.tsx:139
 msgid "Genre"
 msgstr "Genre"
@@ -483,87 +523,87 @@ msgstr "Clear search"
 msgid "Rename"
 msgstr "Rename"
 
-#: src/components/TrackList.tsx:263
+#: src/components/TrackList.tsx:265
 msgid "Create new playlist..."
 msgstr "Create new playlist..."
 
-#: src/components/TrackList.tsx:265
+#: src/components/TrackList.tsx:267
 #: src/routes/playlists.tsx:63
 msgid "New playlist"
 msgstr "New playlist"
 
-#: src/components/TrackList.tsx:276
+#: src/components/TrackList.tsx:278
 msgid "No playlists"
 msgstr "No playlists"
 
 #. placeholder {0}: selection.size
 #. placeholder {1}: playlist.name
-#: src/components/TrackList.tsx:290
+#: src/components/TrackList.tsx:292
 msgid "{0} track(s) were added to \"{1}\""
 msgstr "{0} track(s) were added to \"{1}\""
 
-#: src/components/TrackList.tsx:308
+#: src/components/TrackList.tsx:310
 msgid "{selectedCount, plural, one {# track selected} other {# tracks selected}}"
 msgstr "{selectedCount, plural, one {# track selected} other {# tracks selected}}"
 
-#: src/components/TrackList.tsx:319
+#: src/components/TrackList.tsx:321
 msgid "Find compatible tracks"
 msgstr "Find compatible tracks"
 
-#: src/components/TrackList.tsx:332
+#: src/components/TrackList.tsx:334
 msgid "Add to queue"
 msgstr "Add to queue"
 
-#: src/components/TrackList.tsx:340
+#: src/components/TrackList.tsx:342
 msgid "Play next"
 msgstr "Play next"
 
-#: src/components/TrackList.tsx:352
+#: src/components/TrackList.tsx:354
 msgid "Add to playlist"
 msgstr "Add to playlist"
 
-#: src/components/TrackList.tsx:362
+#: src/components/TrackList.tsx:364
 msgid "Search for \"{item}\""
 msgstr "Search for \"{item}\""
 
-#: src/components/TrackList.tsx:375
+#: src/components/TrackList.tsx:377
 msgid "Copy \"{item}\""
 msgstr "Copy \"{item}\""
 
-#: src/components/TrackList.tsx:398
+#: src/components/TrackList.tsx:400
 msgid "Edit track"
 msgstr "Edit track"
 
-#: src/components/TrackList.tsx:408
+#: src/components/TrackList.tsx:410
 msgid "Show in file manager"
 msgstr "Show in file manager"
 
-#: src/components/TrackList.tsx:414
+#: src/components/TrackList.tsx:416
 msgid "Remove from library"
 msgstr "Remove from library"
 
 #. placeholder {0}: selection.size
-#: src/components/TrackList.tsx:417
+#: src/components/TrackList.tsx:419
 msgid "Are you sure you want to remove {0} track(s) from your library?"
 msgstr "Are you sure you want to remove {0} track(s) from your library?"
 
-#: src/components/TrackList.tsx:419
+#: src/components/TrackList.tsx:421
 msgid "Remove tracks"
 msgstr "Remove tracks"
 
-#: src/components/TrackList.tsx:421
+#: src/components/TrackList.tsx:423
 #: src/routes/settings.library.tsx:100
 #: src/routes/settings.library.tsx:145
 #: src/routes/tracks.$trackID.tsx:257
 msgid "Cancel"
 msgstr "Cancel"
 
-#: src/components/TrackList.tsx:422
+#: src/components/TrackList.tsx:424
 #: src/routes/settings.library.tsx:64
 msgid "Remove"
 msgstr "Remove"
 
-#: src/components/TrackListDefault.tsx:148
+#: src/components/TrackListDefault.tsx:151
 #: src/components/TrackListGrouped.tsx:58
 msgid "Track list"
 msgstr "Track list"
@@ -575,54 +615,54 @@ msgstr "Track list"
 msgid "{0, plural, one {# track} other {# tracks}}"
 msgstr "{0, plural, one {# track} other {# tracks}}"
 
-#: src/components/TrackListHeader.tsx:53
+#: src/components/TrackListHeader.tsx:56
 #: src/routes/tracks.$trackID.tsx:88
 msgid "Title"
 msgstr "Title"
 
-#: src/components/TrackListHeader.tsx:54
+#: src/components/TrackListHeader.tsx:57
 msgid "RB / Key"
 msgstr "RB / Key"
 
-#: src/components/TrackListHeader.tsx:55
+#: src/components/TrackListHeader.tsx:58
 msgid "RB BPM"
 msgstr "RB BPM"
 
-#: src/components/TrackListHeader.tsx:56
+#: src/components/TrackListHeader.tsx:59
 #: src/routes/tracks.$trackID.tsx:241
 msgid "Duration"
 msgstr "Duration"
 
-#: src/components/TrackListHeader.tsx:57
+#: src/components/TrackListHeader.tsx:60
 msgid "Artist"
 msgstr "Artist"
 
-#: src/components/TrackListHeader.tsx:58
+#: src/components/TrackListHeader.tsx:61
 #: src/routes/tracks.$trackID.tsx:99
 msgid "Album"
 msgstr "Album"
 
-#: src/components/TrackListHeader.tsx:60
+#: src/components/TrackListHeader.tsx:63
 msgid "Museek Genre and Energy"
 msgstr "Museek Genre and Energy"
 
-#: src/components/TrackListHeader.tsx:76
+#: src/components/TrackListHeader.tsx:79
 msgid "Track list sorting options"
 msgstr "Track list sorting options"
 
-#: src/components/TrackListHeaderCell.tsx:129
+#: src/components/TrackListHeaderCell.tsx:139
 msgid "Move {title} column"
 msgstr "Move {title} column"
 
-#: src/components/TrackListHeaderCell.tsx:130
+#: src/components/TrackListHeaderCell.tsx:140
 msgid "Drag to reorder. Or press Space, use arrow keys, then Space to drop."
 msgstr "Drag to reorder. Or press Space, use arrow keys, then Space to drop."
 
-#: src/components/TrackListHeaderCell.tsx:147
+#: src/components/TrackListHeaderCell.tsx:157
 msgid "Resize {title}"
 msgstr "Resize {title}"
 
-#: src/components/TrackListHeaderCell.tsx:153
+#: src/components/TrackListHeaderCell.tsx:163
 msgid "Drag to resize. Double-click to reset. Use arrow keys to adjust."
 msgstr "Drag to resize. Double-click to reset. Use arrow keys to adjust."
 

@@ -1,5 +1,5 @@
 import { type FinderTagFilters, validateFinderTagFilters } from './finder-tags';
-import type { HarmonicSearch } from './rekordbox';
+import { validateMatchSortBy, type HarmonicSearch } from './rekordbox';
 
 export const LIBRARY_VIEW_STORAGE_KEY = 'museeks-library-view';
 
@@ -26,7 +26,7 @@ export function validateLibraryView(
       search.adventurous === true || search.adventurous === 'true'
         ? true
         : undefined,
-    matchSortBy: search.matchSortBy === 'Bpm' ? 'Bpm' : undefined,
+    matchSortBy: validateMatchSortBy(search.matchSortBy),
     matchOrder:
       search.matchOrder === 'Dsc' || search.matchOrder === 'Asc'
         ? search.matchOrder

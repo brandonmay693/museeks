@@ -19,7 +19,14 @@ import ConfigBridge from '../lib/bridge-config';
 import { configQuery } from '../lib/queries';
 import Icon from './Icon';
 
+export type TrackSortControl = {
+  by: SortBy;
+  order: SortOrder;
+  onChange: (by: SortBy, order: SortOrder) => void;
+};
+
 type Props = {
+  sorting?: TrackSortControl;
   title: string;
   column?: TrackColumn;
   resize?: {
@@ -57,9 +64,11 @@ export default function TrackListHeaderCell(props: Props) {
 
   const config = useSuspenseQuery(configQuery).data;
 
+  const currentSortBy = props.sorting?.by ?? config.library_sort_by;
+  const currentSortOrder = props.sorting?.order ?? config.library_sort_order;
   const icon =
-    sortBy && config.library_sort_by === sortBy
-      ? config.library_sort_order === 'Asc'
+    sortBy && currentSortBy === sortBy
+      ? currentSortOrder === 'Asc'
         ? 'chevronUp'
         : 'chevronDown'
       : null;
@@ -88,13 +97,14 @@ export default function TrackListHeaderCell(props: Props) {
   const handleSort = useCallback(() => {
     if (!sortBy) return;
     const newSortOrder: SortOrder =
-      sortBy === config.library_sort_by
-        ? config.library_sort_order === 'Asc'
+      sortBy === currentSortBy
+        ? currentSortOrder === 'Asc'
           ? 'Dsc'
           : 'Asc'
         : 'Asc';
-    sortMutation.mutate({ sortBy, sortOrder: newSortOrder });
-  }, [sortBy, config.library_sort_by, config.library_sort_order, sortMutation]);
+    if (props.sorting) props.sorting.onChange(sortBy, newSortOrder);
+    else sortMutation.mutate({ sortBy, sortOrder: newSortOrder });
+  }, [sortBy, currentSortBy, currentSortOrder, sortMutation, props.sorting]);
 
   const content = (
     <React.Fragment>
