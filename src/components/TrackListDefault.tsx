@@ -164,6 +164,7 @@ export default function TrackListDefault(props: Props) {
                     selected={selectedTracks.has(track.id)}
                     track={track}
                     columnWidths={columns.widths}
+                    columnOrder={columns.order}
                     showRekordbox={!!props.rekordbox}
                     rekordbox={props.rekordbox?.[track.path.normalize('NFC')]}
                     showFinderTags={showFinderTags}

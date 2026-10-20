@@ -1,6 +1,23 @@
+import {
+  DndContext,
+  closestCenter,
+  pointerWithin,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import { restrictToHorizontalAxis } from '@dnd-kit/modifiers';
+import {
+  SortableContext,
+  horizontalListSortingStrategy,
+  sortableKeyboardCoordinates,
+} from '@dnd-kit/sortable';
 import { useLingui } from '@lingui/react/macro';
 import * as stylex from '@stylexjs/stylex';
 
+import type { SortBy } from '../generated/typings';
+import type { TrackColumn } from '../hooks/useTrackColumnWidths';
 import type useTrackColumnWidths from '../hooks/useTrackColumnWidths';
 import TrackListHeaderCell from './TrackListHeaderCell';
 
@@ -19,6 +36,39 @@ export default function TrackListHeader({
 }: Props) {
   const { t } = useLingui();
 
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
+  const visible = columns.order.filter((column) =>
+    column === 'rekordbox' || column === 'bpm'
+      ? showRekordbox
+      : column === 'finderTags'
+        ? showFinderTags
+        : true,
+  );
+  const labels: Record<TrackColumn, string> = {
+    title: t`Title`,
+    rekordbox: t`RB / Key`,
+    bpm: t`RB BPM`,
+    duration: t`Duration`,
+    artist: t`Artist`,
+    album: t`Album`,
+    genre: t`Genre`,
+    finderTags: t`Museek Genre and Energy`,
+  };
+  const sorts: Record<TrackColumn, SortBy | null> = {
+    title: 'Title',
+    rekordbox: null,
+    bpm: null,
+    duration: 'Duration',
+    artist: 'Artist',
+    album: 'Album',
+    genre: 'Genre',
+    finderTags: 'Energy',
+  };
   return (
     <div
       {...stylex.props(styles.trackListHeader)}
@@ -35,76 +85,37 @@ export default function TrackListHeader({
         title="&nbsp;"
         sortBy={null}
       />
-      <TrackListHeaderCell
-        resize={{
-          width: columns.widths.title,
-          onChange: (width, commit) => columns.resize('title', width, commit),
-          onReset: () => columns.reset('title'),
+      <DndContext
+        sensors={sensors}
+        collisionDetection={(args) =>
+          args.pointerCoordinates ? pointerWithin(args) : closestCenter(args)
+        }
+        modifiers={[restrictToHorizontalAxis]}
+        onDragEnd={({ active, over }) => {
+          if (over)
+            columns.move(active.id as TrackColumn, over.id as TrackColumn);
         }}
-        title={t`Title`}
-        sortBy={sortable ? 'Title' : null}
-      />
-      {showRekordbox && (
-        <TrackListHeaderCell
-          title={t`RB / Key`}
-          sortBy={null}
-          resize={{
-            width: columns.widths.rekordbox,
-            onChange: (width, commit) =>
-              columns.resize('rekordbox', width, commit),
-            onReset: () => columns.reset('rekordbox'),
-          }}
-        />
-      )}
-      <TrackListHeaderCell
-        resize={{
-          width: columns.widths.duration,
-          onChange: (width, commit) =>
-            columns.resize('duration', width, commit),
-          onReset: () => columns.reset('duration'),
-        }}
-        title={t`Duration`}
-        sortBy={sortable ? 'Duration' : null}
-      />
-      <TrackListHeaderCell
-        resize={{
-          width: columns.widths.artist,
-          onChange: (width, commit) => columns.resize('artist', width, commit),
-          onReset: () => columns.reset('artist'),
-        }}
-        title={t`Artist`}
-        sortBy={sortable ? 'Artist' : null}
-      />
-      <TrackListHeaderCell
-        resize={{
-          width: columns.widths.album,
-          onChange: (width, commit) => columns.resize('album', width, commit),
-          onReset: () => columns.reset('album'),
-        }}
-        title={t`Album`}
-        sortBy={sortable ? 'Album' : null}
-      />
-      <TrackListHeaderCell
-        resize={{
-          width: columns.widths.genre,
-          onChange: (width, commit) => columns.resize('genre', width, commit),
-          onReset: () => columns.reset('genre'),
-        }}
-        title={t`Genre`}
-        sortBy={sortable ? 'Genre' : null}
-      />
-      {showFinderTags && (
-        <TrackListHeaderCell
-          resize={{
-            width: columns.widths.finderTags,
-            onChange: (width, commit) =>
-              columns.resize('finderTags', width, commit),
-            onReset: () => columns.reset('finderTags'),
-          }}
-          title={t`Museek Genre and Energy`}
-          sortBy={sortable ? 'Energy' : null}
-        />
-      )}
+      >
+        <SortableContext
+          items={visible}
+          strategy={horizontalListSortingStrategy}
+        >
+          {visible.map((column) => (
+            <TrackListHeaderCell
+              key={column}
+              column={column}
+              title={labels[column]}
+              sortBy={sortable ? sorts[column] : null}
+              resize={{
+                width: columns.widths[column],
+                onChange: (width, commit) =>
+                  columns.resize(column, width, commit),
+                onReset: () => columns.reset(column),
+              }}
+            />
+          ))}
+        </SortableContext>
+      </DndContext>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import { setupI18n } from '@lingui/core';
 import { MenuItem } from '@tauri-apps/api/menu';
 import { expect, test, vi } from 'vite-plus/test';
-import { page } from 'vite-plus/test/browser';
+import { page, userEvent } from 'vite-plus/test/browser';
 
 import type { RekordboxSnapshot } from '../generated/typings';
 import { messages } from '../translations/en.po';
@@ -20,8 +20,8 @@ const snapshot: RekordboxSnapshot = {
   skipped: 0,
   tracks: {
     '/whiskey-blues.mp3': { key: 'Am', bpm: 120 },
-    '/majestic-blues.mp3': { key: 'C', bpm: 122 },
-    '/romantic-blues.mp3': { key: 'Em', bpm: 124 },
+    '/majestic-blues.mp3': { key: 'C', bpm: 122.5 },
+    '/romantic-blues.mp3': { key: 'Em', bpm: null },
   },
 };
 
@@ -63,6 +63,50 @@ test.runIf(import.meta.env.PLATFORM === 'macos')(
     options.action?.('match');
     const pane = page.getByRole('region', { name: 'Harmonic matches' });
     await expect.element(pane).toBeVisible();
+    await expect
+      .element(pane.getByRole('button', { name: 'RB BPM', exact: true }))
+      .toBeVisible();
+    await expect
+      .element(pane.getByText('122.5', { exact: true }))
+      .toBeVisible();
+    await expect
+      .element(
+        pane
+          .getByRole('option', { name: /Romantic Blues/ })
+          .getByText('—', { exact: true }),
+      )
+      .toBeVisible();
+    const moveBpm = pane.getByRole('button', { name: 'Move RB BPM column' });
+    await moveBpm.click();
+    await userEvent.keyboard('[Space]');
+    await expect.element(moveBpm).toHaveAttribute('aria-pressed', 'true');
+    await userEvent.keyboard('[ArrowLeft]');
+    await userEvent.keyboard('[Space]');
+    await expect
+      .poll(() =>
+        JSON.parse(
+          localStorage.getItem('museeks-track-column-order') ?? '[]',
+        ).slice(0, 3),
+      )
+      .toEqual(['title', 'bpm', 'rekordbox']);
+    const headers = page.getByRole('group', {
+      name: 'Track list sorting options',
+    });
+    for (const header of headers.elements()) {
+      expect(
+        Array.from(header.querySelectorAll('[data-column]'))
+          .slice(0, 3)
+          .map((cell) => cell.getAttribute('data-column')),
+      ).toEqual(['title', 'bpm', 'rekordbox']);
+    }
+    const bpmCell = pane.getByText('122.5', { exact: true }).element();
+    expect(bpmCell.nextElementSibling?.textContent).toContain('8B');
+    // Resizing still works after moving a column.
+    const resizeBpm = pane.getByRole('separator', { name: 'Resize RB BPM' });
+    await resizeBpm.click();
+    await userEvent.keyboard('[ArrowRight]');
+    await expect.element(resizeBpm).toHaveAttribute('aria-valuenow', '95');
+
     const matches = pane.getByRole('listbox', { name: 'Compatible tracks' });
     await expect
       .element(matches.getByRole('option', { name: /Romantic Blues/ }))

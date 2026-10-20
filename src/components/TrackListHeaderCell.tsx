@@ -1,3 +1,5 @@
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { useLingui } from '@lingui/react/macro';
 import * as stylex from '@stylexjs/stylex';
 import {
@@ -5,10 +7,11 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from '@tanstack/react-query';
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useId } from 'react';
 
 import type { Config, SortBy, SortOrder } from '../generated/typings';
 import {
+  type TrackColumn,
   MIN_COLUMN_WIDTH,
   MAX_COLUMN_WIDTH,
 } from '../hooks/useTrackColumnWidths';
@@ -18,6 +21,7 @@ import Icon from './Icon';
 
 type Props = {
   title: string;
+  column?: TrackColumn;
   resize?: {
     width: number;
     onChange: (width: number, commit: boolean) => void;
@@ -30,6 +34,19 @@ type Props = {
 export default function TrackListHeaderCell(props: Props) {
   const { sortBy, xstyle, title, resize } = props;
   const { t } = useLingui();
+  const fallbackID = useId();
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    setActivatorNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: props.column ?? fallbackID,
+    disabled: !props.column,
+  });
   const drag = useRef<{
     pointerId: number;
     x: number;
@@ -93,8 +110,29 @@ export default function TrackListHeaderCell(props: Props) {
   return (
     <div
       {...stylex.props(styles.container, xstyle)}
-      style={resize ? { width: resize.width } : undefined}
+      ref={setNodeRef}
+      data-column={props.column}
+      style={{
+        width: resize?.width,
+        transform: CSS.Translate.toString(transform),
+        transition,
+        zIndex: isDragging ? 6 : undefined,
+        opacity: isDragging ? 0.65 : undefined,
+      }}
     >
+      {props.column && (
+        <button
+          type="button"
+          ref={setActivatorNodeRef}
+          {...attributes}
+          {...listeners}
+          aria-label={t`Move ${title} column`}
+          title={t`Drag to reorder. Or press Space, use arrow keys, then Space to drop.`}
+          {...stylex.props(styles.moveHandle)}
+        >
+          ⋮
+        </button>
+      )}
       <button
         type="button"
         disabled={sortBy === null}
@@ -191,6 +229,16 @@ const styles = stylex.create({
     display: 'flex',
     flexShrink: 0,
     minWidth: 0,
+  },
+  moveHandle: {
+    flexShrink: 0,
+    borderWidth: 0,
+    backgroundColor: 'transparent',
+    color: 'inherit',
+    paddingBlock: 0,
+    paddingInline: '3px',
+    cursor: 'grab',
+    touchAction: 'none',
   },
   resizeHandle: {
     position: 'absolute',

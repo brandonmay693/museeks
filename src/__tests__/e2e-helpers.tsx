@@ -145,7 +145,7 @@ export function getTrackAt(index: number) {
 export function getSortButton(name: string) {
   return page
     .getByRole('group', { name: 'Track list sorting options' })
-    .getByRole('button', { name });
+    .getByRole('button', { name, exact: true });
 }
 
 // Trigger a fake scan of the library based on mocks

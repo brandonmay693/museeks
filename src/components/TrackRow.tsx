@@ -1,13 +1,14 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { useLingui } from '@lingui/react/macro';
 import * as stylex from '@stylexjs/stylex';
-import type React from 'react';
+import React from 'react';
 
 import type { FinderTags, RekordboxTrack, Track } from '../generated/typings';
 import useFormattedDuration from '../hooks/useFormattedDuration';
-import type {
-  TrackColumnWidths,
-  TrackColumn,
+import {
+  TRACK_COLUMNS,
+  type TrackColumnWidths,
+  type TrackColumn,
 } from '../hooks/useTrackColumnWidths';
 import { camelotKey } from '../lib/rekordbox';
 import PlayingIndicator from './PlayingIndicator';
@@ -30,6 +31,7 @@ type Props = {
   selected: boolean;
   showRekordbox?: boolean;
   rekordbox?: RekordboxTrack;
+  columnOrder?: TrackColumn[];
   columnWidths?: TrackColumnWidths;
   showFinderTags?: boolean;
   finderTags?: FinderTags;
@@ -97,6 +99,102 @@ export default function TrackRow(props: Props) {
   const isDropAbove = isOver && overIndex < activeIndex;
   const isDropBelow = isOver && overIndex > activeIndex;
 
+  const cells: Record<TrackColumn, React.ReactNode> = {
+    title: (
+      <div
+        style={columnStyle('title')}
+        {...stylex.props(cellStyles.cell, cellStyles.title)}
+      >
+        <span {...stylex.props(cellStyles.titleText)}>{track.title}</span>
+        {props.showArtistInTitle === true && track.artists.length > 0 && (
+          <span {...stylex.props(cellStyles.artistInTitle)}>
+            {'— '}
+            {track.artists.join(', ')}
+          </span>
+        )}
+      </div>
+    ),
+    rekordbox: props.showRekordbox && (
+      <div
+        {...stylex.props(cellStyles.cell)}
+        style={columnStyle('rekordbox')}
+        title={
+          props.rekordbox
+            ? t`In Rekordbox export · Key: ${props.rekordbox.key ?? '—'}`
+            : t`Not found in the connected Rekordbox export`
+        }
+      >
+        {props.rekordbox ? `✓ ${rbKey ?? props.rekordbox.key ?? '—'}` : '—'}
+      </div>
+    ),
+    duration: (
+      <div
+        style={columnStyle('duration')}
+        {...stylex.props(
+          cellStyles.cell,
+          cellStyles.duration,
+          props.simplified === true && cellStyles.rightAligned,
+        )}
+      >
+        {duration}
+      </div>
+    ),
+    artist: props.simplified !== true && (
+      <div
+        style={columnStyle('artist')}
+        {...stylex.props(
+          cellStyles.cell,
+          cellStyles.artist,
+          props.showFinderTags && cellStyles.narrowMetadata,
+        )}
+      >
+        {track.artists.join(', ')}
+      </div>
+    ),
+    album: props.simplified !== true && (
+      <div
+        style={columnStyle('album')}
+        {...stylex.props(
+          cellStyles.cell,
+          cellStyles.album,
+          props.showFinderTags && cellStyles.narrowMetadata,
+        )}
+      >
+        {track.album}
+      </div>
+    ),
+    genre: props.simplified !== true && (
+      <div
+        style={columnStyle('genre')}
+        {...stylex.props(
+          cellStyles.cell,
+          cellStyles.genre,
+          props.showFinderTags && cellStyles.narrowGenre,
+        )}
+      >
+        {track.genres.join(', ')}
+      </div>
+    ),
+    finderTags: props.simplified !== true && props.showFinderTags && (
+      <div
+        {...stylex.props(cellStyles.cell, cellStyles.finderTags)}
+        style={columnStyle('finderTags')}
+        title={genreAndEnergy}
+      >
+        {genreAndEnergy}
+      </div>
+    ),
+    bpm: props.showRekordbox && (
+      <div {...stylex.props(cellStyles.cell)} style={columnStyle('bpm')}>
+        {props.rekordbox?.bpm != null
+          ? props.rekordbox.bpm.toLocaleString(undefined, {
+              maximumFractionDigits: 2,
+            })
+          : '—'}
+      </div>
+    ),
+  };
+
   return (
     // oxlint-disable-next-line jsx_a11y/click-events-have-key-events - given by ...listeners
     <li
@@ -135,84 +233,9 @@ export default function TrackRow(props: Props) {
       <div {...stylex.props(cellStyles.cell, cellStyles.trackPlaying)}>
         {props.isPlaying ? <PlayingIndicator /> : null}
       </div>
-      <div
-        style={columnStyle('title')}
-        {...stylex.props(cellStyles.cell, cellStyles.title)}
-      >
-        <span {...stylex.props(cellStyles.titleText)}>{track.title}</span>
-        {props.showArtistInTitle === true && track.artists.length > 0 && (
-          <span {...stylex.props(cellStyles.artistInTitle)}>
-            {'— '}
-            {track.artists.join(', ')}
-          </span>
-        )}
-      </div>
-      {props.showRekordbox && (
-        <div
-          {...stylex.props(cellStyles.cell)}
-          style={columnStyle('rekordbox')}
-          title={
-            props.rekordbox
-              ? t`In Rekordbox export · Key: ${props.rekordbox.key ?? '—'}`
-              : t`Not found in the connected Rekordbox export`
-          }
-        >
-          {props.rekordbox ? `✓ ${rbKey ?? props.rekordbox.key ?? '—'}` : '—'}
-        </div>
-      )}
-      <div
-        style={columnStyle('duration')}
-        {...stylex.props(
-          cellStyles.cell,
-          cellStyles.duration,
-          props.simplified === true && cellStyles.rightAligned,
-        )}
-      >
-        {duration}
-      </div>
-      {props.simplified !== true && (
-        <>
-          <div
-            style={columnStyle('artist')}
-            {...stylex.props(
-              cellStyles.cell,
-              cellStyles.artist,
-              props.showFinderTags && cellStyles.narrowMetadata,
-            )}
-          >
-            {track.artists.join(', ')}
-          </div>
-          <div
-            style={columnStyle('album')}
-            {...stylex.props(
-              cellStyles.cell,
-              cellStyles.album,
-              props.showFinderTags && cellStyles.narrowMetadata,
-            )}
-          >
-            {track.album}
-          </div>
-          <div
-            style={columnStyle('genre')}
-            {...stylex.props(
-              cellStyles.cell,
-              cellStyles.genre,
-              props.showFinderTags && cellStyles.narrowGenre,
-            )}
-          >
-            {track.genres.join(', ')}
-          </div>
-          {props.showFinderTags && (
-            <div
-              {...stylex.props(cellStyles.cell, cellStyles.finderTags)}
-              style={columnStyle('finderTags')}
-              title={genreAndEnergy}
-            >
-              {genreAndEnergy}
-            </div>
-          )}
-        </>
-      )}
+      {(props.columnOrder ?? TRACK_COLUMNS).map((column) => (
+        <React.Fragment key={column}>{cells[column]}</React.Fragment>
+      ))}
     </li>
   );
 }

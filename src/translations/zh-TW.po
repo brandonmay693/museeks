@@ -299,7 +299,7 @@ msgid "Needs tagging"
 msgstr ""
 
 #: src/components/LibraryTagFilters.tsx:62
-#: src/components/TrackListHeader.tsx:93
+#: src/components/TrackListHeader.tsx:59
 #: src/routes/tracks.$trackID.tsx:139
 msgid "Genre"
 msgstr "流派"
@@ -567,42 +567,54 @@ msgstr ""
 msgid "{0, plural, one {# track} other {# tracks}}"
 msgstr "{0, plural, one {# 首音軌} other {# 首音軌}}"
 
-#: src/components/TrackListHeader.tsx:26
-msgid "Track list sorting options"
-msgstr ""
-
-#: src/components/TrackListHeader.tsx:44
+#: src/components/TrackListHeader.tsx:53
 #: src/routes/tracks.$trackID.tsx:88
 msgid "Title"
 msgstr "標題"
 
-#: src/components/TrackListHeader.tsx:49
+#: src/components/TrackListHeader.tsx:54
 msgid "RB / Key"
 msgstr ""
 
-#: src/components/TrackListHeader.tsx:66
+#: src/components/TrackListHeader.tsx:55
+msgid "RB BPM"
+msgstr ""
+
+#: src/components/TrackListHeader.tsx:56
 #: src/routes/tracks.$trackID.tsx:241
 msgid "Duration"
 msgstr "時長"
 
-#: src/components/TrackListHeader.tsx:75
+#: src/components/TrackListHeader.tsx:57
 msgid "Artist"
 msgstr "藝術家"
 
-#: src/components/TrackListHeader.tsx:84
+#: src/components/TrackListHeader.tsx:58
 #: src/routes/tracks.$trackID.tsx:99
 msgid "Album"
 msgstr "專輯"
 
-#: src/components/TrackListHeader.tsx:104
+#: src/components/TrackListHeader.tsx:60
 msgid "Museek Genre and Energy"
 msgstr ""
 
-#: src/components/TrackListHeaderCell.tsx:109
+#: src/components/TrackListHeader.tsx:76
+msgid "Track list sorting options"
+msgstr ""
+
+#: src/components/TrackListHeaderCell.tsx:129
+msgid "Move {title} column"
+msgstr ""
+
+#: src/components/TrackListHeaderCell.tsx:130
+msgid "Drag to reorder. Or press Space, use arrow keys, then Space to drop."
+msgstr ""
+
+#: src/components/TrackListHeaderCell.tsx:147
 msgid "Resize {title}"
 msgstr ""
 
-#: src/components/TrackListHeaderCell.tsx:115
+#: src/components/TrackListHeaderCell.tsx:153
 msgid "Drag to resize. Double-click to reset. Use arrow keys to adjust."
 msgstr ""
 
@@ -632,11 +644,11 @@ msgid "Your search returned no results"
 msgstr "您的搜尋沒有找到結果"
 
 #. placeholder {0}: props.rekordbox.key ?? '—'
-#: src/components/TrackRow.tsx:156
+#: src/components/TrackRow.tsx:123
 msgid "In Rekordbox export · Key: {0}"
 msgstr ""
 
-#: src/components/TrackRow.tsx:157
+#: src/components/TrackRow.tsx:124
 msgid "Not found in the connected Rekordbox export"
 msgstr ""
 
